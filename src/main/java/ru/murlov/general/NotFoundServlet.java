@@ -19,7 +19,7 @@ public class NotFoundServlet extends HttpServlet {
         Map<String, Object> error = Map.of(
                 "status", 404,
                 "error", "Not found",
-                "message", "Endpoint not found"
+                "message", "Invalid path"
         );
 
         mapper.writeValue(response.getWriter(), error);

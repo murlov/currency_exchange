@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.*;
 import ru.murlov.exception.NotFoundException;
 
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet("/currency/*")
 public class CurrencyServlet extends HttpServlet {
@@ -15,16 +16,25 @@ public class CurrencyServlet extends HttpServlet {
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
         String pathInfo = request.getPathInfo();
+        Map<String, Object> error;
 
-        if (pathInfo == null) {
-            sendError(response, 400, "Missing currency code", mapper);
+        if (pathInfo == null || pathInfo.isEmpty() || pathInfo.equals("/")) {
+            error = Map.of(
+                    "status", 400,
+                    "error", "Bad request",
+                    "message", "Missing currency code"
+            );
+            sendError(response, 400, error, mapper);
         }
 
         String[] parts = pathInfo.split("/");
         if (parts.length > 2) {
-            sendError(response, 404, "Invalid path", mapper);
-        } else if (parts.length == 0) {
-            sendError(response, 400, "Missing currency code", mapper);
+            error = Map.of(
+                    "status", 404,
+                    "error", "Not found",
+                    "message", "Invalid path"
+            );
+            sendError(response, 404, error, mapper);
         }
 
         CurrencyService currencyService = new CurrencyService();
@@ -33,23 +43,23 @@ public class CurrencyServlet extends HttpServlet {
             CurrencyDto currencyDto = currencyService.getByCode(code);
             sendJson(response, currencyDto, mapper);
         } catch (NotFoundException e) {
-            sendError(response, 404, "Currency not found", mapper);
+            error = Map.of(
+                    "status", 404,
+                    "error", "Not found",
+                    "message", "Currency not found"
+            );
+            sendError(response, 404, error, mapper);
         }
 
     }
 
-    private void sendError(HttpServletResponse response, int status, String message, ObjectMapper mapper) throws IOException {
+    private void sendError(HttpServletResponse response, int status, Map<String, Object> error, ObjectMapper mapper) throws IOException {
         response.setStatus(status);
-        mapper.writeValue(response.getWriter(), message);
+        mapper.writeValue(response.getWriter(), error);
     }
 
     private void sendJson(HttpServletResponse response, CurrencyDto currencyDto, ObjectMapper mapper) throws IOException {
         response.setStatus(200);
         mapper.writeValue(response.getWriter(), currencyDto);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 }
