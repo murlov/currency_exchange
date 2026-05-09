@@ -1,12 +1,14 @@
 package ru.murlov.currency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import ru.murlov.exception.NotFoundException;
+import ru.murlov.exceptions.NotFoundException;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @WebServlet("/currency/*")
@@ -15,6 +17,7 @@ public class CurrencyServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
         String pathInfo = request.getPathInfo();
         Map<String, Object> error;
 
@@ -49,6 +52,15 @@ public class CurrencyServlet extends HttpServlet {
                     "message", "Currency not found"
             );
             sendError(response, 404, error, mapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            error = Map.of(
+                    "status", 500,
+                    "error", "Internal server error",
+                    "message", "Unexpected error occurred"
+            );
+            sendError(response, 500, error, mapper);
         }
 
     }

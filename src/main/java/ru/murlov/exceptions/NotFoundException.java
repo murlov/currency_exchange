@@ -1,4 +1,4 @@
-package ru.murlov.exception;
+package ru.murlov.exceptions;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

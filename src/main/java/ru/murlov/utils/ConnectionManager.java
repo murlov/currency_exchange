@@ -13,27 +13,33 @@ public final class ConnectionManager {
     private static final String POOL_SIZE_KEY = "db.pool.size";
     private static BlockingQueue<Connection> pool;
 
-    static {
+    public static void initConnectionPoll() {
+        String poolSize = PropertiesUtil.get(POOL_SIZE_KEY);
+        int size = poolSize == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSize);
+        pool = new ArrayBlockingQueue<>(size);
+
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        initConnectionPoll();
-    }
-
-    private static void initConnectionPoll() {
-        String poolSize = PropertiesUtil.get(POOL_SIZE_KEY);
-        int size = poolSize == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSize);
-        pool = new ArrayBlockingQueue<>(size);
 
         for (int i = 0; i < size; i++) {
             Connection connection = open();
             Connection proxyConnection = (Connection) Proxy.newProxyInstance(ConnectionManager.class.getClassLoader(),
                     new Class[]{Connection.class},
-                    (proxy, method, args) -> method.getName().equals("close") ?
-                            pool.add((Connection) proxy) :
-                            method.invoke(connection, args));
+                    (proxy, method, args) -> {
+                        if (method.getName().equals("close")) {
+                            pool.add((Connection) proxy);
+                            return null;
+                        }
+                        try {
+                            return method.invoke(connection, args);
+                        } catch (Exception e) {
+                            throw e.getCause();
+                        }
+                    }
+            );
             pool.add(proxyConnection);
         }
     }
@@ -49,7 +55,7 @@ public final class ConnectionManager {
     private static Connection open() {
         try {
             return DriverManager
-                    .getConnection("jdbc:sqlite:D:/Programming/java/currency_exchange/src/main/databases/main.db");
+                    .getConnection("jdbc:sqlite:file:D:/Programming/java/currency_exchange/src/main/databases/main.db?mode=rw");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

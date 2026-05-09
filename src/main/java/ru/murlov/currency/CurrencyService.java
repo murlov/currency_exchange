@@ -1,6 +1,6 @@
 package ru.murlov.currency;
 
-import ru.murlov.exception.NotFoundException;
+import ru.murlov.exceptions.NotFoundException;
 
 public class CurrencyService {
 
