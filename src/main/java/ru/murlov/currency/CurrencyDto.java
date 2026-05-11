@@ -1,9 +1,18 @@
 package ru.murlov.currency;
 
 public class CurrencyDto {
+    private final long id;
     private String code;
     private String fullName;
     private char sign;
+
+    public CurrencyDto(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
 
     public String getCode() {
         return code;

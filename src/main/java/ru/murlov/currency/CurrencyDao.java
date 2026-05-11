@@ -6,17 +6,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class CurrencyDao {
 
-    private final static String READ_SQL = """
+    private final static String GET_BY_CODE = """
                                             SELECT * FROM currencies
                                             WHERE code = ?
                                            """;
+
+    private final static String GET_ALL = """
+            SELECT id, code, full_name, sign
+            FROM currencies
+            """;
+
     public Optional<Currency> getByCode(String code) {
         try (Connection connection = ConnectionManager.get();
-             PreparedStatement statement = connection.prepareStatement(READ_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(GET_BY_CODE)) {
             statement.setString(1, code);
 
             ResultSet resultSet = statement.executeQuery();
@@ -40,4 +48,32 @@ public class CurrencyDao {
         }
     }
 
+    public List<Currency> getAll() {
+        try (Connection connection = ConnectionManager.get();
+             PreparedStatement statement = connection.prepareStatement(GET_ALL)) {
+            List<Currency> currencies = new ArrayList<>();
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String tempSign = resultSet.getString("sign");
+                if (tempSign == null || tempSign.length() != 1) {
+                    throw new RuntimeException("Column 'sign' must contain exactly one character");
+                }
+                char sign = tempSign.charAt(0);
+
+                currencies.add(
+                        new Currency(
+                                resultSet.getLong("id"),
+                                resultSet.getString("code"),
+                                resultSet.getString("full_name"),
+                                sign
+                        )
+                );
+            }
+
+            return currencies;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -11,7 +11,7 @@ public class CurrencyMapper {
     }
 
     public static CurrencyDto toDto(Currency currency) {
-        CurrencyDto dto = new CurrencyDto();
+        CurrencyDto dto = new CurrencyDto(currency.getId());
         dto.setCode(currency.getCode());
         dto.setFullName(currency.getFullName());
         dto.setSign(currency.getSign());
