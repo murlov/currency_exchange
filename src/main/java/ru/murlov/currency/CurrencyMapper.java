@@ -5,7 +5,7 @@ public class CurrencyMapper {
     public static Currency toModel(CurrencyDto dto) {
         Currency currency = new Currency();
         currency.setCode(dto.getCode());
-        currency.setFullName(dto.getFullName());
+        currency.setName(dto.getName());
         currency.setSign(dto.getSign());
         return currency;
     }
@@ -13,7 +13,7 @@ public class CurrencyMapper {
     public static CurrencyDto toDto(Currency currency) {
         CurrencyDto dto = new CurrencyDto(currency.getId());
         dto.setCode(currency.getCode());
-        dto.setFullName(currency.getFullName());
+        dto.setName(currency.getName());
         dto.setSign(currency.getSign());
         return dto;
     }

@@ -12,19 +12,25 @@ import java.util.Optional;
 
 public class CurrencyDao {
 
-    private final static String GET_BY_CODE = """
+    private final static String GET_BY_CODE_SQL = """
                                             SELECT * FROM currencies
                                             WHERE code = ?
                                            """;
 
-    private final static String GET_ALL = """
+    private final static String GET_ALL_SQL = """
             SELECT id, code, full_name, sign
             FROM currencies
             """;
 
+    private final static String SAVE_SQL = """
+            INSERT INTO currencies
+            (code, full_name, sign)
+            VALUES (?, ?, ?)
+            """;
+
     public Optional<Currency> getByCode(String code) {
         try (Connection connection = ConnectionManager.get();
-             PreparedStatement statement = connection.prepareStatement(GET_BY_CODE)) {
+             PreparedStatement statement = connection.prepareStatement(GET_BY_CODE_SQL)) {
             statement.setString(1, code);
 
             ResultSet resultSet = statement.executeQuery();
@@ -50,7 +56,7 @@ public class CurrencyDao {
 
     public List<Currency> getAll() {
         try (Connection connection = ConnectionManager.get();
-             PreparedStatement statement = connection.prepareStatement(GET_ALL)) {
+             PreparedStatement statement = connection.prepareStatement(GET_ALL_SQL)) {
             List<Currency> currencies = new ArrayList<>();
 
             ResultSet resultSet = statement.executeQuery();
@@ -72,6 +78,25 @@ public class CurrencyDao {
             }
 
             return currencies;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Currency save(Currency currency) {
+        try (Connection connection = ConnectionManager.get();
+             PreparedStatement statement = connection.prepareStatement(SAVE_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, currency.getCode());
+            statement.setString(2, currency.getName());
+            statement.setString(3, String.valueOf(currency.getSign()));
+
+            statement.executeUpdate();
+            ResultSet keys = statement.getGeneratedKeys();
+            if (keys.next()) {
+                currency.setId(keys.getLong(1));
+            }
+
+            return currency;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

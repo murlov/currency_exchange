@@ -51,8 +51,8 @@ public class CurrencyServlet extends HttpServlet {
         mapper.writeValue(response.getWriter(), message);
     }
 
-    private void sendJson(HttpServletResponse response, CurrencyDto currencyDto, ObjectMapper mapper) throws IOException {
+    private void sendJson(HttpServletResponse response, Object value, ObjectMapper mapper) throws IOException {
         response.setStatus(200);
-        mapper.writeValue(response.getWriter(), currencyDto);
+        mapper.writeValue(response.getWriter(), value);
     }
 }

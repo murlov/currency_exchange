@@ -1,17 +1,27 @@
 package ru.murlov.currency;
 
 public class CurrencyDto {
-    private final long id;
+    private long id;
     private String code;
-    private String fullName;
+    private String name;
     private char sign;
 
     public CurrencyDto(long id) {
         this.id = id;
     }
 
+    public CurrencyDto(String code, String name, char sign) {
+        this.code = code;
+        this.name = name;
+        this.sign = sign;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getCode() {
@@ -22,12 +32,12 @@ public class CurrencyDto {
         this.code = code;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public char getSign() {

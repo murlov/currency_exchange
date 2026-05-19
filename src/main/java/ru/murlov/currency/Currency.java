@@ -2,24 +2,28 @@ package ru.murlov.currency;
 
 public class Currency {
 
-    private final Long id;
+    private Long id;
     private String code;
-    private String fullName;
+    private String name;
     private char sign;
 
     public Currency() {
         id = null;
     }
 
-    public Currency(Long id, String code, String fullName, char sign) {
+    public Currency(Long id, String code, String name, char sign) {
         this.id = id;
         this.code = code;
-        this.fullName = fullName;
+        this.name = name;
         this.sign = sign;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCode() {
@@ -30,12 +34,12 @@ public class Currency {
         this.code = code;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public char getSign() {
@@ -51,7 +55,7 @@ public class Currency {
         return "Currency{" +
                 "id=" + id +
                 ", code='" + code + '\'' +
-                ", fullName='" + fullName + '\'' +
+                ", fullName='" + name + '\'' +
                 ", sign=" + sign +
                 '}';
     }

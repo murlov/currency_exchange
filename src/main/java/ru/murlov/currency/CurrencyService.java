@@ -8,18 +8,26 @@ import java.util.List;
 public class CurrencyService {
 
     public CurrencyDto getByCode(String code) {
-        CurrencyDao dao = new CurrencyDao();
-        Currency currency = dao.getByCode(code).orElseThrow(() -> new NotFoundException("Currency not found: " + code));
+        CurrencyDao currencyDao = new CurrencyDao();
+        Currency currency = currencyDao.getByCode(code).orElseThrow(() -> new NotFoundException("Currency not found: " + code));
         return CurrencyMapper.toDto(currency);
     }
 
     public List<CurrencyDto> getAll() {
-        CurrencyDao dao = new CurrencyDao();
-        List<Currency> currencies = new ArrayList<>(dao. getAll());
+        CurrencyDao currencyDao = new CurrencyDao();
+        List<Currency> currencies = new ArrayList<>(currencyDao. getAll());
         List<CurrencyDto> currencyDtos = new ArrayList<>();
         for (Currency currency : currencies) {
             currencyDtos.add(CurrencyMapper.toDto(currency));
         }
         return currencyDtos;
+    }
+
+    public CurrencyDto save(CurrencyDto currencyDto) {
+        CurrencyDao currencyDao = new CurrencyDao();
+        Currency currency = CurrencyMapper.toModel(currencyDto);
+
+        Currency newCurrency = currencyDao.save(currency);
+        return CurrencyMapper.toDto(newCurrency);
     }
 }
