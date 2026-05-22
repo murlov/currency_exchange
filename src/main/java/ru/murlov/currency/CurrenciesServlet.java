@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/currencies")
 public class CurrenciesServlet extends HttpServlet {
@@ -28,10 +29,14 @@ public class CurrenciesServlet extends HttpServlet {
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        Map<String, Object> error;
 
         String tempSign = request.getParameter("sign");
         if (tempSign == null || tempSign.length() != 1) {
-            sendError(response, 400, "Parameter 'sign' must contain exactly one character", mapper);
+            error = Map.of(
+                    "message", "Parameter 'sign' must contain exactly one character"
+            );
+            sendError(response, 400, error, mapper);
             return;
         }
         char sign = tempSign.charAt(0);
@@ -42,7 +47,16 @@ public class CurrenciesServlet extends HttpServlet {
         );
 
         CurrencyService currencyService = new CurrencyService();
-        CurrencyDto newCurrencyDto = currencyService.save(currencyDto);
+        CurrencyDto newCurrencyDto;
+        try {
+            newCurrencyDto = currencyService.save(currencyDto);
+        } catch (Exception e) {
+            error = Map.of(
+                    "message", "Unexpected error occurred"
+            );
+            sendError(response, 500, error, mapper);
+            return;
+        }
         sendJson(response, newCurrencyDto, mapper);
     }
 
@@ -51,7 +65,7 @@ public class CurrenciesServlet extends HttpServlet {
         mapper.writeValue(response.getWriter(), value);
     }
 
-    private void sendError(HttpServletResponse response, int status, String message, ObjectMapper mapper) throws IOException {
+    private void sendError(HttpServletResponse response, int status, Map<String, Object> message, ObjectMapper mapper) throws IOException {
         response.setStatus(status);
         mapper.writeValue(response.getWriter(), message);
     }
