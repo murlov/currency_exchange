@@ -14,7 +14,7 @@ import java.util.Map;
 @WebServlet("/currencies")
 public class CurrenciesServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -25,14 +25,39 @@ public class CurrenciesServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         Map<String, Object> error;
 
+        String code = request.getParameter("code");
+        String name = request.getParameter("name");
         String tempSign = request.getParameter("sign");
-        if (tempSign == null || tempSign.length() != 1) {
+
+        if (code == null || code.isBlank()) {
+            error = Map.of(
+                    "message", "Parameter 'code' is required"
+            );
+            sendError(response, 400, error, mapper);
+            return;
+        }
+
+        if (name == null || name.isBlank()) {
+            error = Map.of(
+                    "message", "Parameter 'name' is required"
+            );
+            sendError(response, 400, error, mapper);
+            return;
+        }
+
+        if (tempSign == null || tempSign.isBlank()) {
+            error = Map.of(
+                    "message", "Parameter 'sign' is required"
+            );
+            sendError(response, 400, error, mapper);
+            return;
+        } else if (tempSign.length() != 1) {
             error = Map.of(
                     "message", "Parameter 'sign' must contain exactly one character"
             );
@@ -41,8 +66,6 @@ public class CurrenciesServlet extends HttpServlet {
         }
         char sign = tempSign.charAt(0);
         CurrencyDto currencyDto = new CurrencyDto(
-                request.getParameter("code"),
-                request.getParameter("name"),
                 sign
         );
 
