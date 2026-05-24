@@ -1,5 +1,8 @@
 package ru.murlov.currency;
 
+import org.sqlite.SQLiteErrorCode;
+import org.sqlite.SQLiteException;
+import ru.murlov.exceptions.DuplicateCurrencyCodeException;
 import ru.murlov.utils.ConnectionManager;
 
 import java.sql.Connection;
@@ -90,7 +93,16 @@ public class CurrencyDao {
             statement.setString(2, currency.getName());
             statement.setString(3, String.valueOf(currency.getSign()));
 
-            statement.executeUpdate();
+            try {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                if (isDuplicateCode(e)) {
+                    throw new DuplicateCurrencyCodeException(
+                            "Currency code already exists"
+                    );
+                }
+                throw new RuntimeException(e);
+            }
             ResultSet keys = statement.getGeneratedKeys();
             if (keys.next()) {
                 currency.setId(keys.getLong(1));
@@ -100,5 +112,9 @@ public class CurrencyDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean isDuplicateCode(SQLException e) {
+        return (e instanceof SQLiteException sqliteE && sqliteE.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE);
     }
 }

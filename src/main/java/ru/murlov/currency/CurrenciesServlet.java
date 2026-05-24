@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import ru.murlov.exceptions.DuplicateCurrencyCodeException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,6 +67,8 @@ public class CurrenciesServlet extends HttpServlet {
         }
         char sign = tempSign.charAt(0);
         CurrencyDto currencyDto = new CurrencyDto(
+                code,
+                name,
                 sign
         );
 
@@ -73,6 +76,12 @@ public class CurrenciesServlet extends HttpServlet {
         CurrencyDto newCurrencyDto;
         try {
             newCurrencyDto = currencyService.save(currencyDto);
+        } catch (DuplicateCurrencyCodeException e) {
+            error = Map.of(
+                    "message", "Currency code already exists"
+            );
+            sendError(response, 409, error, mapper);
+            return;
         } catch (Exception e) {
             error = Map.of(
                     "message", "Unexpected error occurred"
