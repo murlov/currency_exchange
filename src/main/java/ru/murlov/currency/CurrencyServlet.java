@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.*;
 import ru.murlov.exceptions.NotFoundException;
 
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet("/currency/*")
 public class CurrencyServlet extends HttpServlet {
@@ -18,41 +19,45 @@ public class CurrencyServlet extends HttpServlet {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         String pathInfo = request.getPathInfo();
         String message;
+        Map<String, Object> error;
 
         if (pathInfo == null || pathInfo.isEmpty() || pathInfo.equals("/")) {
-            message = "Missing currency code";
-            sendError(response, 400, message, mapper);
+            error = Map.of(
+                    "message", "Missing currency code"
+            );
+            sendResponse(response, 400, error, mapper);
         }
 
         String[] parts = pathInfo.split("/");
         if (parts.length > 2) {
-            message = "Invalid path";
-            sendError(response, 404, message, mapper);
+            error = Map.of(
+                    "message", "Invalid path"
+            );
+            sendResponse(response, 404, error, mapper);
         }
 
         CurrencyService currencyService = new CurrencyService();
         String code = parts[1];
         try {
             CurrencyDto currencyDto = currencyService.getByCode(code);
-            sendJson(response, currencyDto, mapper);
+            sendResponse(response, 200, currencyDto, mapper);
         } catch (NotFoundException e) {
-            message = "Currency not found";
-            sendError(response, 404, message, mapper);
+            error = Map.of(
+                    "message", "Currency not found"
+            );
+            sendResponse(response, 404, error, mapper);
         } catch (Exception e) {
             e.printStackTrace();
-            message = "Unexpected error occurred";
-            sendError(response, 500, message, mapper);
+            error = Map.of(
+                    "message", "Unexpected error occurred"
+            );
+            sendResponse(response, 500, error, mapper);
         }
 
     }
 
-    private void sendError(HttpServletResponse response, int status, String message, ObjectMapper mapper) throws IOException {
+    private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
         response.setStatus(status);
-        mapper.writeValue(response.getWriter(), message);
-    }
-
-    private void sendJson(HttpServletResponse response, Object value, ObjectMapper mapper) throws IOException {
-        response.setStatus(200);
         mapper.writeValue(response.getWriter(), value);
     }
 }

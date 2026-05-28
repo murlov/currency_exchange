@@ -2,7 +2,6 @@ package ru.murlov.currency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.murlov.exceptions.DuplicateCurrencyCodeException;
@@ -22,7 +21,7 @@ public class CurrenciesServlet extends HttpServlet {
         CurrencyService currencyService = new CurrencyService();
         List<CurrencyDto> currencyDtos = new ArrayList<>(currencyService.getAll());
 
-        sendJson(response, currencyDtos, mapper);
+        sendResponse(response, 200, currencyDtos, mapper);
     }
 
     @Override
@@ -40,7 +39,7 @@ public class CurrenciesServlet extends HttpServlet {
             error = Map.of(
                     "message", "Parameter 'code' is required"
             );
-            sendError(response, 400, error, mapper);
+            sendResponse(response, 400, error, mapper);
             return;
         }
 
@@ -48,7 +47,7 @@ public class CurrenciesServlet extends HttpServlet {
             error = Map.of(
                     "message", "Parameter 'name' is required"
             );
-            sendError(response, 400, error, mapper);
+            sendResponse(response, 400, error, mapper);
             return;
         }
 
@@ -56,13 +55,13 @@ public class CurrenciesServlet extends HttpServlet {
             error = Map.of(
                     "message", "Parameter 'sign' is required"
             );
-            sendError(response, 400, error, mapper);
+            sendResponse(response, 400, error, mapper);
             return;
         } else if (tempSign.length() != 1) {
             error = Map.of(
                     "message", "Parameter 'sign' must contain exactly one character"
             );
-            sendError(response, 400, error, mapper);
+            sendResponse(response, 400, error, mapper);
             return;
         }
         char sign = tempSign.charAt(0);
@@ -80,25 +79,20 @@ public class CurrenciesServlet extends HttpServlet {
             error = Map.of(
                     "message", "Currency code already exists"
             );
-            sendError(response, 409, error, mapper);
+            sendResponse(response, 409, error, mapper);
             return;
         } catch (Exception e) {
             error = Map.of(
                     "message", "Unexpected error occurred"
             );
-            sendError(response, 500, error, mapper);
+            sendResponse(response, 500, error, mapper);
             return;
         }
-        sendJson(response, newCurrencyDto, mapper);
+        sendResponse(response, 200, newCurrencyDto, mapper);
     }
 
-    private void sendJson(HttpServletResponse response, Object value, ObjectMapper mapper) throws IOException {
-        response.setStatus(200);
-        mapper.writeValue(response.getWriter(), value);
-    }
-
-    private void sendError(HttpServletResponse response, int status, Map<String, Object> message, ObjectMapper mapper) throws IOException {
+    private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
         response.setStatus(status);
-        mapper.writeValue(response.getWriter(), message);
+        mapper.writeValue(response.getWriter(), value);
     }
 }
