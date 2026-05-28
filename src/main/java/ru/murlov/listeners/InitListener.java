@@ -4,6 +4,7 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import ru.murlov.utils.ConnectionManager;
+import ru.murlov.utils.DatabaseInitializer;
 
 @WebListener
 public class InitListener implements ServletContextListener {
@@ -12,6 +13,7 @@ public class InitListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         try {
             ConnectionManager.initConnectionPoll();
+            DatabaseInitializer.init();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize DB", e);

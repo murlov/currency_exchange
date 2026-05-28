@@ -53,9 +53,10 @@ public final class ConnectionManager {
     }
 
     private static Connection open() {
+        String path = PropertiesUtil.get("db.path");
         try {
             return DriverManager
-                    .getConnection("jdbc:sqlite:file:D:/Programming/java/currency_exchange/src/main/databases/main.db?mode=rw");
+                    .getConnection("jdbc:sqlite:" + path);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
