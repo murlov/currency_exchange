@@ -1,4 +1,4 @@
-package ru.murlov.general;
+package ru.murlov.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;

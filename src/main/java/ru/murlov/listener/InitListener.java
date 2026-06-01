@@ -1,10 +1,10 @@
-package ru.murlov.listeners;
+package ru.murlov.listener;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import ru.murlov.utils.ConnectionManager;
-import ru.murlov.utils.DatabaseInitializer;
+import ru.murlov.util.ConnectionManager;
+import ru.murlov.util.DatabaseInitializer;
 
 @WebListener
 public class InitListener implements ServletContextListener {

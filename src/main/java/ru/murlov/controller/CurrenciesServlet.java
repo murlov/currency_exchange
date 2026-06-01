@@ -1,10 +1,12 @@
-package ru.murlov.currency;
+package ru.murlov.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import ru.murlov.exceptions.DuplicateCurrencyCodeException;
+import ru.murlov.dto.CurrencyDto;
+import ru.murlov.service.CurrencyService;
+import ru.murlov.exception.DuplicateCurrencyCodeException;
 
 import java.io.IOException;
 import java.util.ArrayList;

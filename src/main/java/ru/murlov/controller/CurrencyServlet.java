@@ -1,11 +1,13 @@
-package ru.murlov.currency;
+package ru.murlov.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import ru.murlov.exceptions.NotFoundException;
+import ru.murlov.dto.CurrencyDto;
+import ru.murlov.service.CurrencyService;
+import ru.murlov.exception.NotFoundException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -18,7 +20,6 @@ public class CurrencyServlet extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         String pathInfo = request.getPathInfo();
-        String message;
         Map<String, Object> error;
 
         if (pathInfo == null || pathInfo.isEmpty() || pathInfo.equals("/")) {

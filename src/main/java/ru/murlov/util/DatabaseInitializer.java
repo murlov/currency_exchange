@@ -1,4 +1,4 @@
-package ru.murlov.utils;
+package ru.murlov.util;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,9 +27,7 @@ public final class DatabaseInitializer {
                     statement.executeUpdate(query);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
 

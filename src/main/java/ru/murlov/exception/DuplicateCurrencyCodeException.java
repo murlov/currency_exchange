@@ -1,4 +1,4 @@
-package ru.murlov.exceptions;
+package ru.murlov.exception;
 
 public class DuplicateCurrencyCodeException extends RuntimeException {
     public DuplicateCurrencyCodeException(String message) {

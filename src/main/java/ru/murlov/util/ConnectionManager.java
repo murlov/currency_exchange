@@ -1,4 +1,4 @@
-package ru.murlov.utils;
+package ru.murlov.util;
 
 import java.lang.reflect.Proxy;
 import java.sql.Connection;

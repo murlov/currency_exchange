@@ -1,9 +1,10 @@
-package ru.murlov.currency;
+package ru.murlov.dao;
 
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
-import ru.murlov.exceptions.DuplicateCurrencyCodeException;
-import ru.murlov.utils.ConnectionManager;
+import ru.murlov.model.Currency;
+import ru.murlov.exception.DuplicateCurrencyCodeException;
+import ru.murlov.util.ConnectionManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

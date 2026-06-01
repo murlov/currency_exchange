@@ -1,4 +1,7 @@
-package ru.murlov.currency;
+package ru.murlov.mapper;
+
+import ru.murlov.dto.CurrencyDto;
+import ru.murlov.model.Currency;
 
 public class CurrencyMapper {
 

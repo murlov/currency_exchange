@@ -1,26 +1,28 @@
-package ru.murlov.currency;
+package ru.murlov.model;
 
-public class CurrencyDto {
-    private long id;
+public class Currency {
+
+    private Long id;
     private String code;
     private String name;
     private char sign;
 
-    public CurrencyDto(long id) {
-        this.id = id;
+    public Currency() {
+        id = null;
     }
 
-    public CurrencyDto(String code, String name, char sign) {
+    public Currency(Long id, String code, String name, char sign) {
+        this.id = id;
         this.code = code;
         this.name = name;
         this.sign = sign;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,5 +48,15 @@ public class CurrencyDto {
 
     public void setSign(char sign) {
         this.sign = sign;
+    }
+
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", fullName='" + name + '\'' +
+                ", sign=" + sign +
+                '}';
     }
 }
