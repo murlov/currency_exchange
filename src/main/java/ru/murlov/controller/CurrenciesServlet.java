@@ -5,13 +5,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.murlov.dto.CurrencyDto;
+import ru.murlov.exception.ValidationException;
 import ru.murlov.service.CurrencyService;
-import ru.murlov.exception.DuplicateCurrencyCodeException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @WebServlet("/currencies")
 public class CurrenciesServlet extends HttpServlet {
@@ -31,40 +30,23 @@ public class CurrenciesServlet extends HttpServlet {
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        Map<String, Object> error;
 
         String code = request.getParameter("code");
         String name = request.getParameter("name");
         String tempSign = request.getParameter("sign");
 
         if (code == null || code.isBlank()) {
-            error = Map.of(
-                    "message", "Parameter 'code' is required"
-            );
-            sendResponse(response, 400, error, mapper);
-            return;
+            throw new ValidationException("Parameter 'code' is required");
         }
 
         if (name == null || name.isBlank()) {
-            error = Map.of(
-                    "message", "Parameter 'name' is required"
-            );
-            sendResponse(response, 400, error, mapper);
-            return;
+            throw new ValidationException("Parameter 'name' is required");
         }
 
         if (tempSign == null || tempSign.isBlank()) {
-            error = Map.of(
-                    "message", "Parameter 'sign' is required"
-            );
-            sendResponse(response, 400, error, mapper);
-            return;
+            throw new ValidationException("Parameter 'sign' is required");
         } else if (tempSign.length() != 1) {
-            error = Map.of(
-                    "message", "Parameter 'sign' must contain exactly one character"
-            );
-            sendResponse(response, 400, error, mapper);
-            return;
+            throw new ValidationException("Parameter 'sign' must contain exactly one character");
         }
         char sign = tempSign.charAt(0);
         CurrencyDto currencyDto = new CurrencyDto(
@@ -75,21 +57,7 @@ public class CurrenciesServlet extends HttpServlet {
 
         CurrencyService currencyService = new CurrencyService();
         CurrencyDto newCurrencyDto;
-        try {
-            newCurrencyDto = currencyService.save(currencyDto);
-        } catch (DuplicateCurrencyCodeException e) {
-            error = Map.of(
-                    "message", "Currency code already exists"
-            );
-            sendResponse(response, 409, error, mapper);
-            return;
-        } catch (Exception e) {
-            error = Map.of(
-                    "message", "Unexpected error occurred"
-            );
-            sendResponse(response, 500, error, mapper);
-            return;
-        }
+        newCurrencyDto = currencyService.save(currencyDto);
         sendResponse(response, 200, newCurrencyDto, mapper);
     }
 
