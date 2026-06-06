@@ -41,16 +41,11 @@ public class CurrencyDao {
             Currency currency = null;
 
             if (resultSet.next()) {
-                String tempSign = resultSet.getString("sign");
-                if (tempSign == null || tempSign.length() != 1) {
-                    throw new RuntimeException("Column 'sign' must contain exactly one character");
-                }
-                char sign = tempSign.charAt(0);
                 currency = new Currency(
                         resultSet.getLong("id"),
                         resultSet.getString("code"),
                         resultSet.getString("full_name"),
-                        sign);
+                        resultSet.getString("sign"));
             }
             return Optional.ofNullable(currency);
         } catch (SQLException e) {
@@ -65,18 +60,12 @@ public class CurrencyDao {
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                String tempSign = resultSet.getString("sign");
-                if (tempSign == null || tempSign.length() != 1) {
-                    throw new RuntimeException("Column 'sign' must contain exactly one character");
-                }
-                char sign = tempSign.charAt(0);
-
                 currencies.add(
                         new Currency(
                                 resultSet.getLong("id"),
                                 resultSet.getString("code"),
                                 resultSet.getString("full_name"),
-                                sign
+                                resultSet.getString("sign")
                         )
                 );
             }

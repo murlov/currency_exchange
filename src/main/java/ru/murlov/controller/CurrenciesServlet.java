@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.murlov.dto.CurrencyDto;
-import ru.murlov.exception.ValidationException;
 import ru.murlov.service.CurrencyService;
+import ru.murlov.util.CurrencyValidator;
+import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,29 +32,17 @@ public class CurrenciesServlet extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        String code = request.getParameter("code");
-        String name = request.getParameter("name");
-        String tempSign = request.getParameter("sign");
+        String code = FormatUtil.getRequiredNormalizedParameter(request, "code");
+        String name = FormatUtil.getRequiredNormalizedParameter(request, "name");
+        String sign = FormatUtil.getRequiredNormalizedParameter(request, "sign");
 
-        if (code == null || code.isBlank()) {
-            throw new ValidationException("Parameter 'code' is required");
-        }
-
-        if (name == null || name.isBlank()) {
-            throw new ValidationException("Parameter 'name' is required");
-        }
-
-        if (tempSign == null || tempSign.isBlank()) {
-            throw new ValidationException("Parameter 'sign' is required");
-        } else if (tempSign.length() != 1) {
-            throw new ValidationException("Parameter 'sign' must contain exactly one character");
-        }
-        char sign = tempSign.charAt(0);
         CurrencyDto currencyDto = new CurrencyDto(
                 code,
                 name,
                 sign
         );
+
+        CurrencyValidator.validate(currencyDto);
 
         CurrencyService currencyService = new CurrencyService();
         CurrencyDto newCurrencyDto;

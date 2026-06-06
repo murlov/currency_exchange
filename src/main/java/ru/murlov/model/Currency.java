@@ -5,13 +5,13 @@ public class Currency {
     private Long id;
     private String code;
     private String name;
-    private char sign;
+    private String sign;
 
     public Currency() {
         id = null;
     }
 
-    public Currency(Long id, String code, String name, char sign) {
+    public Currency(Long id, String code, String name, String sign) {
         this.id = id;
         this.code = code;
         this.name = name;
@@ -42,11 +42,11 @@ public class Currency {
         this.name = name;
     }
 
-    public char getSign() {
+    public String getSign() {
         return sign;
     }
 
-    public void setSign(char sign) {
+    public void setSign(String sign) {
         this.sign = sign;
     }
 
