@@ -45,6 +45,6 @@ public class CurrencyDto {
     }
 
     public void setSign(String sign) {
-        this.sign = this.sign;
+        this.sign = sign;
     }
 }
