@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.murlov.exception.DuplicateCurrencyCodeException;
+import ru.murlov.exception.MethodNotAllowedException;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.exception.ValidationException;
 
@@ -27,6 +28,8 @@ public class ExceptionHandlingFilter extends HttpFilter {
             sendError(response, HttpServletResponse.SC_CONFLICT, e.getMessage());
         } catch (ValidationException e) {
             sendError(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        } catch (MethodNotAllowedException e) {
+            sendError(response, HttpServletResponse.SC_METHOD_NOT_ALLOWED, e.getMessage());
         } catch (Exception e) {
             sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unexpected error occurred");
         }

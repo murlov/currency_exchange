@@ -5,7 +5,7 @@ import ru.murlov.exception.ValidationException;
 
 public final class CurrencyValidator {
 
-    private CurrencyValidator () {
+    private CurrencyValidator() {
     }
 
     public static void validate(CurrencyDto currencyDto) {

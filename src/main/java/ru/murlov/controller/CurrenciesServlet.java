@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/currencies")
-public class CurrenciesServlet extends HttpServlet {
+public class CurrenciesServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");

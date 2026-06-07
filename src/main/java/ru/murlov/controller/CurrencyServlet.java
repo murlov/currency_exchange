@@ -13,7 +13,7 @@ import ru.murlov.exception.NotFoundException;
 import java.io.IOException;
 
 @WebServlet("/currency/*")
-public class CurrencyServlet extends HttpServlet {
+public class CurrencyServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
