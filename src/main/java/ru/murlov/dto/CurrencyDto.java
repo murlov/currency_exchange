@@ -6,8 +6,11 @@ public class CurrencyDto {
     private String name;
     private String sign;
 
-    public CurrencyDto(long id) {
+    public CurrencyDto(Long id, String code, String name, String sign) {
         this.id = id;
+        this.code = code;
+        this.name = name;
+        this.sign = sign;
     }
 
     public CurrencyDto(String code, String name, String sign) {

@@ -6,18 +6,19 @@ import ru.murlov.model.Currency;
 public class CurrencyMapper {
 
     public static Currency toModel(CurrencyDto dto) {
-        Currency currency = new Currency();
-        currency.setCode(dto.getCode());
-        currency.setName(dto.getName());
-        currency.setSign(dto.getSign());
-        return currency;
+        return new Currency(
+                dto.getCode(),
+                dto.getName(),
+                dto.getSign()
+        );
     }
 
     public static CurrencyDto toDto(Currency currency) {
-        CurrencyDto dto = new CurrencyDto(currency.getId());
-        dto.setCode(currency.getCode());
-        dto.setName(currency.getName());
-        dto.setSign(currency.getSign());
-        return dto;
+        return new CurrencyDto(
+                currency.getId(),
+                currency.getCode(),
+                currency.getName(),
+                currency.getSign()
+        );
     }
 }
