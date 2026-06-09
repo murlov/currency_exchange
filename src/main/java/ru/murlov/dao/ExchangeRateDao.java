@@ -25,7 +25,7 @@ public class ExchangeRateDao {
             tc.id as target_currency_id,
             tc.code as target_currency_code,
             tc.full_name as target_currency_name,
-            tc.sign as base_currency_sign,
+            tc.sign as target_currency_sign,
             
             er.rate
             
