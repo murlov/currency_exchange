@@ -1,7 +1,7 @@
 package ru.murlov.dto;
 
 public class CurrencyDto {
-    private long id;
+    private Long id;
     private String code;
     private String name;
     private String sign;
