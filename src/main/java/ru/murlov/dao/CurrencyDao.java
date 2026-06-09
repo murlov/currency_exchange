@@ -2,6 +2,7 @@ package ru.murlov.dao;
 
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
+import ru.murlov.exception.DatabaseException;
 import ru.murlov.model.Currency;
 import ru.murlov.exception.DuplicateCurrencyCodeException;
 import ru.murlov.util.ConnectionManager;
@@ -49,7 +50,7 @@ public class CurrencyDao {
             }
             return Optional.ofNullable(currency);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 
@@ -72,7 +73,7 @@ public class CurrencyDao {
 
             return currencies;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 
@@ -91,7 +92,7 @@ public class CurrencyDao {
                             "Currency code already exists"
                     );
                 }
-                throw new RuntimeException(e);
+                throw new DatabaseException(e);
             }
             ResultSet keys = statement.getGeneratedKeys();
             if (keys.next()) {
@@ -100,7 +101,7 @@ public class CurrencyDao {
 
             return currency;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 

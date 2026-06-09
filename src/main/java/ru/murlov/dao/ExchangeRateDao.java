@@ -1,5 +1,6 @@
 package ru.murlov.dao;
 
+import ru.murlov.exception.DatabaseException;
 import ru.murlov.model.Currency;
 import ru.murlov.model.ExchangeRate;
 import ru.murlov.util.ConnectionManager;
@@ -68,7 +69,7 @@ public class ExchangeRateDao {
 
             return exchangeRates;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 }
