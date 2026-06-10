@@ -20,6 +20,7 @@ public class CurrenciesServlet extends BaseServlet {
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
         CurrencyService currencyService = new CurrencyService();
         List<CurrencyDto> currencyDtos = new ArrayList<>(currencyService.getAll());
 
@@ -47,6 +48,7 @@ public class CurrenciesServlet extends BaseServlet {
         CurrencyService currencyService = new CurrencyService();
         CurrencyDto newCurrencyDto;
         newCurrencyDto = currencyService.save(currencyDto);
+
         sendResponse(response, 200, newCurrencyDto, mapper);
     }
 

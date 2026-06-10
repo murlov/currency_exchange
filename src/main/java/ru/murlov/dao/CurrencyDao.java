@@ -89,7 +89,7 @@ public class CurrencyDao {
             } catch (SQLException e) {
                 if (isDuplicateCode(e)) {
                     throw new DuplicateCurrencyCodeException(
-                            "Currency code already exists"
+                            "Currency with code '" + currency.getCode() + "' already exists"
                     );
                 }
                 throw new DatabaseException(e);
