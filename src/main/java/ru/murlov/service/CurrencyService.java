@@ -13,7 +13,8 @@ public class CurrencyService {
 
     public CurrencyDto getByCode(String code) {
         CurrencyDao currencyDao = new CurrencyDao();
-        Currency currency = currencyDao.getByCode(code).orElseThrow(() -> new NotFoundException("Currency not found: " + code));
+        Currency currency = currencyDao.getByCode(code)
+                .orElseThrow(() -> new NotFoundException("Currency not found: " + code));
         return CurrencyMapper.toDto(currency);
     }
 

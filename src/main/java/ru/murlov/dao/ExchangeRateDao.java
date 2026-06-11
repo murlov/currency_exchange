@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ExchangeRateDao {
 
@@ -33,6 +34,12 @@ public class ExchangeRateDao {
             FROM exchange_rates er
             JOIN currencies bc ON er.base_currency_id = bc.id
             JOIN currencies tc ON er.target_currency_id = tc.id
+            """;
+
+    private final static String GET_BY_CODES_PAIR_SQL =
+            GET_ALL_SQL +
+            """
+            WHERE bc.code = ? AND tc.code = ?
             """;
 
     public List<ExchangeRate> getAll() {
@@ -68,6 +75,41 @@ public class ExchangeRateDao {
             }
 
             return exchangeRates;
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+    }
+
+    public Optional<ExchangeRate> getByCodesPair(String baseCurrencyCode, String targetCurrencyCode) {
+        try (Connection connection = ConnectionManager.get();
+             PreparedStatement statement = connection.prepareStatement(GET_BY_CODES_PAIR_SQL)) {
+            statement.setString(1, baseCurrencyCode);
+            statement.setString(2, targetCurrencyCode);
+
+            ResultSet resultSet = statement.executeQuery();
+            ExchangeRate exchangeRate = null;
+            if (resultSet.next()) {
+                Currency baseCurrency = new Currency(
+                        resultSet.getLong("base_currency_id"),
+                        resultSet.getString("base_currency_code"),
+                        resultSet.getString("base_currency_name"),
+                        resultSet.getString("base_currency_sign")
+                );
+                Currency targetCurrency = new Currency(
+                        resultSet.getLong("target_currency_id"),
+                        resultSet.getString("target_currency_code"),
+                        resultSet.getString("target_currency_name"),
+                        resultSet.getString("target_currency_sign")
+                );
+                exchangeRate = new ExchangeRate(
+                        resultSet.getLong("id"),
+                        baseCurrency,
+                        targetCurrency,
+                        resultSet.getFloat("rate")
+                );
+            }
+
+            return Optional.ofNullable(exchangeRate);
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
