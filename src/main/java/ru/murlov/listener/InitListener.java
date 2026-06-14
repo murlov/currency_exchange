@@ -22,6 +22,6 @@ public class InitListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        ServletContextListener.super.contextDestroyed(sce);
+        ConnectionManager.shutdown();
     }
 }

@@ -11,21 +11,27 @@ public final class ConnectionManager {
 
     private static final int DEFAULT_POOL_SIZE = 10;
     private static final String POOL_SIZE_KEY = "db.pool.size";
-    private static BlockingQueue<Connection> pool;
+    private static final BlockingQueue<Connection> pool;
+    private static final BlockingQueue<Connection> sourceConnections;
+    private static final int poolSize;
+
+    static {
+        String poolSizeValue = PropertiesUtil.get(POOL_SIZE_KEY);
+        poolSize = poolSizeValue == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSizeValue);
+        pool = new ArrayBlockingQueue<>(poolSize);
+        sourceConnections = new ArrayBlockingQueue<>(poolSize);
+    }
 
     public static void initConnectionPoll() {
-        String poolSize = PropertiesUtil.get(POOL_SIZE_KEY);
-        int size = poolSize == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSize);
-        pool = new ArrayBlockingQueue<>(size);
-
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < poolSize; i++) {
             Connection connection = open();
+            sourceConnections.add(connection);
             Connection proxyConnection = (Connection) Proxy.newProxyInstance(ConnectionManager.class.getClassLoader(),
                     new Class[]{Connection.class},
                     (proxy, method, args) -> {
@@ -59,6 +65,16 @@ public final class ConnectionManager {
                     .getConnection("jdbc:sqlite:" + path);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void shutdown() {
+        for (Connection connection : sourceConnections) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
