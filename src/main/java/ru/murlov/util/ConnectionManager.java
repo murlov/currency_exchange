@@ -22,7 +22,7 @@ public final class ConnectionManager {
         sourceConnections = new ArrayBlockingQueue<>(poolSize);
     }
 
-    public static void initConnectionPoll() {
+    public static void initConnectionPool() {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
