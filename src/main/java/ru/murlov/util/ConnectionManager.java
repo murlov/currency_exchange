@@ -20,9 +20,10 @@ public final class ConnectionManager {
         poolSize = poolSizeValue == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSizeValue);
         pool = new ArrayBlockingQueue<>(poolSize);
         sourceConnections = new ArrayBlockingQueue<>(poolSize);
+        initConnectionPool();
     }
 
-    public static void initConnectionPool() {
+    private static void initConnectionPool() {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {

@@ -12,7 +12,6 @@ public class InitListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            ConnectionManager.initConnectionPool();
             DatabaseInitializer.init();
         } catch (Exception e) {
             e.printStackTrace();
