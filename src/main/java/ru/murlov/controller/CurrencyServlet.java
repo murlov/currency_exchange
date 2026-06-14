@@ -14,6 +14,10 @@ import java.io.IOException;
 
 @WebServlet("/currency/*")
 public class CurrencyServlet extends BaseServlet {
+
+    private final static int EXPECTED_PATH_PARTS = 2;
+    private final static int CODE_PART_INDEX = 1;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
@@ -26,12 +30,12 @@ public class CurrencyServlet extends BaseServlet {
         }
 
         String[] parts = pathInfo.split("/");
-        if (parts.length > 2) {
+        if (parts.length != EXPECTED_PATH_PARTS) {
             throw new NotFoundException("Invalid path");
         }
 
         CurrencyService currencyService = new CurrencyService();
-        String code = parts[1];
+        String code = parts[CODE_PART_INDEX];
         CurrencyDto currencyDto = currencyService.getByCode(code);
         sendResponse(response, HttpServletResponse.SC_OK, currencyDto, mapper);
     }
