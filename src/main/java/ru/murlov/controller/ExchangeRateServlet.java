@@ -40,7 +40,7 @@ public class ExchangeRateServlet extends HttpServlet {
         String targetCurrencyCode = codesPair.substring(3, 6);
 
         ExchangeRateDto exchangeRateDto = exchangeRateService.getByCodesPair(baseCurrencyCode, targetCurrencyCode);
-        sendResponse(response, 200, exchangeRateDto, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateDto, mapper);
     }
 
     @Override

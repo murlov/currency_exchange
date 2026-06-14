@@ -33,7 +33,7 @@ public class CurrencyServlet extends BaseServlet {
         CurrencyService currencyService = new CurrencyService();
         String code = parts[1];
         CurrencyDto currencyDto = currencyService.getByCode(code);
-        sendResponse(response, 200, currencyDto, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, currencyDto, mapper);
     }
 
     private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {

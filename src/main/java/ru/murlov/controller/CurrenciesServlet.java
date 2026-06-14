@@ -24,7 +24,7 @@ public class CurrenciesServlet extends BaseServlet {
         CurrencyService currencyService = new CurrencyService();
         List<CurrencyDto> currencyDtos = new ArrayList<>(currencyService.getAll());
 
-        sendResponse(response, 200, currencyDtos, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, currencyDtos, mapper);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class CurrenciesServlet extends BaseServlet {
         CurrencyDto newCurrencyDto;
         newCurrencyDto = currencyService.save(currencyDto);
 
-        sendResponse(response, 200, newCurrencyDto, mapper);
+        sendResponse(response, HttpServletResponse.SC_CREATED, newCurrencyDto, mapper);
     }
 
     private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {

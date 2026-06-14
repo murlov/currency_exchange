@@ -19,7 +19,7 @@ public class ExchangeRatesServlet extends BaseServlet {
         ObjectMapper mapper = new ObjectMapper();
         List<ExchangeRateDto> exchangeRateDtos = exchangeRateService.getAll();
 
-        sendResponse(response, 200, exchangeRateDtos, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateDtos, mapper);
     }
 
     @Override
