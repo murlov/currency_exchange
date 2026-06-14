@@ -8,6 +8,8 @@ public final class PropertiesUtil {
 
     private final static Properties PROPERTIES = new Properties();
 
+    private PropertiesUtil() {}
+
     static {
         loadProperties();
     }

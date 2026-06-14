@@ -3,7 +3,9 @@ package ru.murlov.util;
 import jakarta.servlet.http.HttpServletRequest;
 import ru.murlov.exception.ValidationException;
 
-public class FormatUtil {
+public final class FormatUtil {
+
+    private FormatUtil() {}
 
     public static String getRequiredNormalizedParameter(HttpServletRequest request, String parameterName) {
         String value = request.getParameter(parameterName);
