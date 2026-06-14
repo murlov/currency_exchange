@@ -13,7 +13,7 @@ public final class FormatUtil {
             throw new ValidationException("Parameter '" + parameterName + "' is required");
         }
 
-        if (parameterName.equals("code")) {
+        if (parameterName.toLowerCase().contains("code")) {
             value = value.toUpperCase();
         }
 
