@@ -47,30 +47,11 @@ public class ExchangeRateDao {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(GET_ALL_SQL)) {
             List<ExchangeRate> exchangeRates = new ArrayList<>();
-            Currency baseCurrency;
-            Currency targetCurrency;
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                baseCurrency = new Currency(
-                        resultSet.getLong("base_currency_id"),
-                        resultSet.getString("base_currency_code"),
-                        resultSet.getString("base_currency_name"),
-                        resultSet.getString("base_currency_sign")
-                );
-                targetCurrency = new Currency(
-                        resultSet.getLong("target_currency_id"),
-                        resultSet.getString("target_currency_code"),
-                        resultSet.getString("target_currency_name"),
-                        resultSet.getString("target_currency_sign")
-                );
                 exchangeRates.add(
-                        new ExchangeRate(
-                                resultSet.getLong("id"),
-                                baseCurrency,
-                                targetCurrency,
-                                resultSet.getFloat("rate")
-                        )
+                        getExchangeRate(resultSet)
                 );
             }
 
@@ -89,29 +70,33 @@ public class ExchangeRateDao {
             ResultSet resultSet = statement.executeQuery();
             ExchangeRate exchangeRate = null;
             if (resultSet.next()) {
-                Currency baseCurrency = new Currency(
-                        resultSet.getLong("base_currency_id"),
-                        resultSet.getString("base_currency_code"),
-                        resultSet.getString("base_currency_name"),
-                        resultSet.getString("base_currency_sign")
-                );
-                Currency targetCurrency = new Currency(
-                        resultSet.getLong("target_currency_id"),
-                        resultSet.getString("target_currency_code"),
-                        resultSet.getString("target_currency_name"),
-                        resultSet.getString("target_currency_sign")
-                );
-                exchangeRate = new ExchangeRate(
-                        resultSet.getLong("id"),
-                        baseCurrency,
-                        targetCurrency,
-                        resultSet.getFloat("rate")
-                );
+                exchangeRate = getExchangeRate(resultSet);
             }
 
             return Optional.ofNullable(exchangeRate);
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
+    }
+
+    private ExchangeRate getExchangeRate (ResultSet resultSet) throws SQLException {
+        Currency baseCurrency = new Currency(
+                resultSet.getLong("base_currency_id"),
+                resultSet.getString("base_currency_code"),
+                resultSet.getString("base_currency_name"),
+                resultSet.getString("base_currency_sign")
+        );
+        Currency targetCurrency = new Currency(
+                resultSet.getLong("target_currency_id"),
+                resultSet.getString("target_currency_code"),
+                resultSet.getString("target_currency_name"),
+                resultSet.getString("target_currency_sign")
+        );
+        return new ExchangeRate(
+                resultSet.getLong("id"),
+                baseCurrency,
+                targetCurrency,
+                resultSet.getFloat("rate")
+        );
     }
 }
