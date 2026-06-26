@@ -11,7 +11,11 @@ public final class DatabaseInitializer {
 
     private DatabaseInitializer() {}
 
-    public static void init() {
+    static {
+        init();
+    }
+
+    private static void init() {
         try (Connection connection = ConnectionManager.get();
              Statement statement = connection.createStatement()) {
 
@@ -32,4 +36,6 @@ public final class DatabaseInitializer {
         }
 
     }
+
+    public static void initialize() {}
 }

@@ -12,7 +12,7 @@ public class InitListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            DatabaseInitializer.init();
+            DatabaseInitializer.initialize();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize DB", e);
