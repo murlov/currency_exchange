@@ -16,9 +16,9 @@ public class ExchangeRateMapper {
 
     public static ExchangeRate toModel(ExchangeRateDto exchangeRateDto) {
         return new ExchangeRate(
-                exchangeRateDto.getBase_currency(),
-                exchangeRateDto.getTarget_currency(),
-                exchangeRateDto.getRate()
+                exchangeRateDto.base_currency(),
+                exchangeRateDto.target_currency(),
+                exchangeRateDto.rate()
         );
     }
 }

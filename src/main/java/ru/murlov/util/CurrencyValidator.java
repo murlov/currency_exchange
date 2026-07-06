@@ -1,16 +1,16 @@
 package ru.murlov.util;
 
-import ru.murlov.dto.CurrencyDto;
+import ru.murlov.dto.CurrencyCreateRequest;
 import ru.murlov.exception.ValidationException;
 
 public final class CurrencyValidator {
 
     private CurrencyValidator() {}
 
-    public static void validate(CurrencyDto currencyDto) {
-        validateName(currencyDto.getName());
-        validateCode(currencyDto.getCode());
-        validateSign(currencyDto.getSign());
+    public static void validate(CurrencyCreateRequest currencyCreateRequest) {
+        validateName(currencyCreateRequest.name());
+        validateCode(currencyCreateRequest.code());
+        validateSign(currencyCreateRequest.sign());
     }
 
     private static void validateName(String name) {

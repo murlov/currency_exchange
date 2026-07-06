@@ -1,20 +1,21 @@
 package ru.murlov.mapper;
 
-import ru.murlov.dto.CurrencyDto;
+import ru.murlov.dto.CurrencyCreateRequest;
+import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.model.Currency;
 
 public class CurrencyMapper {
 
-    public static Currency toModel(CurrencyDto dto) {
+    public static Currency toModel(CurrencyCreateRequest currencyCreateRequest) {
         return new Currency(
-                dto.getCode(),
-                dto.getName(),
-                dto.getSign()
+                currencyCreateRequest.code(),
+                currencyCreateRequest.name(),
+                currencyCreateRequest.sign()
         );
     }
 
-    public static CurrencyDto toDto(Currency currency) {
-        return new CurrencyDto(
+    public static CurrencyResponse toDto(Currency currency) {
+        return new CurrencyResponse(
                 currency.getId(),
                 currency.getCode(),
                 currency.getName(),

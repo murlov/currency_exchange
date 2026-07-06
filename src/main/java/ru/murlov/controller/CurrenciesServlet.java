@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import ru.murlov.dto.CurrencyDto;
+import ru.murlov.dto.CurrencyCreateRequest;
+import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.service.CurrencyService;
 import ru.murlov.util.CurrencyValidator;
 import ru.murlov.util.FormatUtil;
@@ -22,9 +23,9 @@ public class CurrenciesServlet extends BaseServlet {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         CurrencyService currencyService = new CurrencyService();
-        List<CurrencyDto> currencyDtos = new ArrayList<>(currencyService.getAll());
+        List<CurrencyResponse> currencyResponses = new ArrayList<>(currencyService.getAll());
 
-        sendResponse(response, HttpServletResponse.SC_OK, currencyDtos, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, currencyResponses, mapper);
     }
 
     @Override
@@ -37,19 +38,19 @@ public class CurrenciesServlet extends BaseServlet {
         String name = FormatUtil.getRequiredNormalizedParameter(request, "name");
         String sign = FormatUtil.getRequiredNormalizedParameter(request, "sign");
 
-        CurrencyDto currencyDto = new CurrencyDto(
+        CurrencyCreateRequest currencyCreateRequest = new CurrencyCreateRequest(
                 code,
                 name,
                 sign
         );
 
-        CurrencyValidator.validate(currencyDto);
+        CurrencyValidator.validate(currencyCreateRequest);
 
         CurrencyService currencyService = new CurrencyService();
-        CurrencyDto newCurrencyDto;
-        newCurrencyDto = currencyService.save(currencyDto);
+        CurrencyResponse newCurrencyResponse;
+        newCurrencyResponse = currencyService.save(currencyCreateRequest);
 
-        sendResponse(response, HttpServletResponse.SC_CREATED, newCurrencyDto, mapper);
+        sendResponse(response, HttpServletResponse.SC_CREATED, newCurrencyResponse, mapper);
     }
 
     private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {

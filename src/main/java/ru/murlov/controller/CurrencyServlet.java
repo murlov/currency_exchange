@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import ru.murlov.dto.CurrencyDto;
+import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.exception.ValidationException;
 import ru.murlov.service.CurrencyService;
 import ru.murlov.exception.NotFoundException;
@@ -36,8 +36,8 @@ public class CurrencyServlet extends BaseServlet {
 
         CurrencyService currencyService = new CurrencyService();
         String code = parts[CODE_PART_INDEX];
-        CurrencyDto currencyDto = currencyService.getByCode(code);
-        sendResponse(response, HttpServletResponse.SC_OK, currencyDto, mapper);
+        CurrencyResponse currencyResponse = currencyService.getByCode(code);
+        sendResponse(response, HttpServletResponse.SC_OK, currencyResponse, mapper);
     }
 
     private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {

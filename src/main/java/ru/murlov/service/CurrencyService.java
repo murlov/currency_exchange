@@ -1,7 +1,8 @@
 package ru.murlov.service;
 
 import ru.murlov.dao.CurrencyDao;
-import ru.murlov.dto.CurrencyDto;
+import ru.murlov.dto.CurrencyCreateRequest;
+import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.mapper.CurrencyMapper;
 import ru.murlov.model.Currency;
@@ -11,26 +12,26 @@ import java.util.List;
 
 public class CurrencyService {
 
-    public CurrencyDto getByCode(String code) {
+    public CurrencyResponse getByCode(String code) {
         CurrencyDao currencyDao = new CurrencyDao();
         Currency currency = currencyDao.getByCode(code)
                 .orElseThrow(() -> new NotFoundException("Currency not found: " + code));
         return CurrencyMapper.toDto(currency);
     }
 
-    public List<CurrencyDto> getAll() {
+    public List<CurrencyResponse> getAll() {
         CurrencyDao currencyDao = new CurrencyDao();
         List<Currency> currencies = new ArrayList<>(currencyDao. getAll());
-        List<CurrencyDto> currencyDtos = new ArrayList<>();
+        List<CurrencyResponse> currencyResponses = new ArrayList<>();
         for (Currency currency : currencies) {
-            currencyDtos.add(CurrencyMapper.toDto(currency));
+            currencyResponses.add(CurrencyMapper.toDto(currency));
         }
-        return currencyDtos;
+        return currencyResponses;
     }
 
-    public CurrencyDto save(CurrencyDto currencyDto) {
+    public CurrencyResponse save(CurrencyCreateRequest currencyCreateRequest) {
         CurrencyDao currencyDao = new CurrencyDao();
-        Currency currency = CurrencyMapper.toModel(currencyDto);
+        Currency currency = CurrencyMapper.toModel(currencyCreateRequest);
 
         Currency newCurrency = currencyDao.save(currency);
         return CurrencyMapper.toDto(newCurrency);
