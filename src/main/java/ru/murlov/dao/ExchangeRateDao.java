@@ -81,19 +81,19 @@ public class ExchangeRateDao {
 
     private ExchangeRate getExchangeRate (ResultSet resultSet) throws SQLException {
         Currency baseCurrency = new Currency(
-                resultSet.getLong("base_currency_id"),
+                resultSet.getInt("base_currency_id"),
                 resultSet.getString("base_currency_code"),
                 resultSet.getString("base_currency_name"),
                 resultSet.getString("base_currency_sign")
         );
         Currency targetCurrency = new Currency(
-                resultSet.getLong("target_currency_id"),
+                resultSet.getInt("target_currency_id"),
                 resultSet.getString("target_currency_code"),
                 resultSet.getString("target_currency_name"),
                 resultSet.getString("target_currency_sign")
         );
         return new ExchangeRate(
-                resultSet.getLong("id"),
+                resultSet.getInt("id"),
                 baseCurrency,
                 targetCurrency,
                 resultSet.getFloat("rate")
