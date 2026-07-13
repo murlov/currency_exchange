@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.*;
 import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.exception.ValidationException;
+import ru.murlov.model.CurrencyPair;
 import ru.murlov.service.ExchangeRateService;
 
 import java.io.IOException;
@@ -19,6 +20,18 @@ public class ExchangeRateServlet extends HttpServlet {
         ExchangeRateService exchangeRateService = new ExchangeRateService();
         ObjectMapper mapper = new ObjectMapper();
 
+        CurrencyPair currencyPair = parseCurrencyPair(request);
+
+        ExchangeRateResponse exchangeRateResponse = exchangeRateService.getByCodesPair(currencyPair.baseCurrencyCode(), currencyPair.targetCurrencyCode());
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
+    }
+
+    @Override
+    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    }
+
+    private CurrencyPair parseCurrencyPair(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
 
 
@@ -39,13 +52,7 @@ public class ExchangeRateServlet extends HttpServlet {
         String baseCurrencyCode = codesPair.substring(0,3);
         String targetCurrencyCode = codesPair.substring(3, 6);
 
-        ExchangeRateResponse exchangeRateResponse = exchangeRateService.getByCodesPair(baseCurrencyCode, targetCurrencyCode);
-        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        return new CurrencyPair(baseCurrencyCode, targetCurrencyCode);
     }
 
     private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
