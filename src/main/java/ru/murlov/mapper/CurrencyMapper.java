@@ -14,6 +14,15 @@ public class CurrencyMapper {
         );
     }
 
+    public static Currency toModel(CurrencyResponse currencyResponse) {
+        return new Currency(
+                currencyResponse.id(),
+                currencyResponse.code(),
+                currencyResponse.name(),
+                currencyResponse.sign()
+        );
+    }
+
     public static CurrencyResponse toDto(Currency currency) {
         return new CurrencyResponse(
                 currency.getId(),
