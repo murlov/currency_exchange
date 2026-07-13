@@ -106,6 +106,7 @@ public class CurrencyDao {
     }
 
     private boolean isDuplicateCode(SQLException e) {
-        return (e instanceof SQLiteException sqliteE && sqliteE.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE);
+        return (e instanceof SQLiteException sqliteE &&
+                sqliteE.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE);
     }
 }
