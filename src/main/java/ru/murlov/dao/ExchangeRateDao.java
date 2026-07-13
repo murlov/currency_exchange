@@ -1,6 +1,9 @@
 package ru.murlov.dao;
 
+import org.sqlite.SQLiteErrorCode;
+import org.sqlite.SQLiteException;
 import ru.murlov.exception.DatabaseException;
+import ru.murlov.exception.DuplicateExchangeRateException;
 import ru.murlov.model.Currency;
 import ru.murlov.model.ExchangeRate;
 import ru.murlov.util.ConnectionManager;
@@ -42,6 +45,12 @@ public class ExchangeRateDao {
             WHERE bc.code = ? AND tc.code = ?
             """;
 
+    private final static String SAVE_SQL = """
+            INSERT INTO exchange_rates
+            (base_currency_id, target_currency_id, rate)
+            VALUES (?, ?, ?)
+            """;
+
     public List<ExchangeRate> getAll() {
 
         try (Connection connection = ConnectionManager.get();
@@ -77,6 +86,44 @@ public class ExchangeRateDao {
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
+    }
+
+    public ExchangeRate save(ExchangeRate exchangeRate) {
+        try (Connection connection = ConnectionManager.get();
+             PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
+            statement.setInt(1, exchangeRate.getBase_currency().getId());
+            statement.setInt(2, exchangeRate.getTarget_currency().getId());
+            statement.setFloat(3, exchangeRate.getRate());
+
+            try {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                if (isDuplicateExchangeRate(e)) {
+                    throw new DuplicateExchangeRateException(
+                            "Exchange rate with currency pair '" +
+                                    exchangeRate.getBase_currency().getCode() +
+                                    "' - '" +
+                                    exchangeRate.getTarget_currency().getCode() +
+                                    "' already exists"
+                    );
+                }
+                throw new DatabaseException(e);
+            }
+
+            ResultSet keys = statement.getGeneratedKeys();
+            if (keys.next()) {
+                exchangeRate.setId(keys.getInt(1));
+            }
+
+            return exchangeRate;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean isDuplicateExchangeRate(SQLException e) {
+        return (e instanceof SQLiteException sqliteE &&
+                sqliteE.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE);
     }
 
     private ExchangeRate getExchangeRate (ResultSet resultSet) throws SQLException {
