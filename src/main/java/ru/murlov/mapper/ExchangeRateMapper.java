@@ -1,15 +1,17 @@
 package ru.murlov.mapper;
 
-import ru.murlov.dto.ExchangeRateDto;
+import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.model.ExchangeRate;
 
 public class ExchangeRateMapper {
 
     public static ExchangeRateDto toDto(ExchangeRate exchangeRate) {
         return new ExchangeRateDto(
+    public static ExchangeRateResponse toDto(ExchangeRate exchangeRate) {
+        return new ExchangeRateResponse(
                 exchangeRate.getId(),
-                exchangeRate.getBase_currency(),
-                exchangeRate.getTarget_currency(),
+                CurrencyMapper.toDto(exchangeRate.getBase_currency()),
+                CurrencyMapper.toDto(exchangeRate.getTarget_currency()),
                 exchangeRate.getRate()
         );
     }

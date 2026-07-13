@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import ru.murlov.dto.ExchangeRateDto;
+import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.exception.ValidationException;
 import ru.murlov.service.ExchangeRateService;
@@ -39,8 +39,8 @@ public class ExchangeRateServlet extends HttpServlet {
         String baseCurrencyCode = codesPair.substring(0,3);
         String targetCurrencyCode = codesPair.substring(3, 6);
 
-        ExchangeRateDto exchangeRateDto = exchangeRateService.getByCodesPair(baseCurrencyCode, targetCurrencyCode);
-        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateDto, mapper);
+        ExchangeRateResponse exchangeRateResponse = exchangeRateService.getByCodesPair(baseCurrencyCode, targetCurrencyCode);
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
     }
 
     @Override

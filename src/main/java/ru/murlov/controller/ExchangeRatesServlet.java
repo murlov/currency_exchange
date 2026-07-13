@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import ru.murlov.dto.ExchangeRateDto;
+import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.service.ExchangeRateService;
 
 import java.io.IOException;
@@ -17,9 +17,9 @@ public class ExchangeRatesServlet extends BaseServlet {
         response.setContentType("application/json");
         ExchangeRateService exchangeRateService = new ExchangeRateService();
         ObjectMapper mapper = new ObjectMapper();
-        List<ExchangeRateDto> exchangeRateDtos = exchangeRateService.getAll();
+        List<ExchangeRateResponse> exchangeRateResponses = exchangeRateService.getAll();
 
-        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateDtos, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponses, mapper);
     }
 
     @Override
