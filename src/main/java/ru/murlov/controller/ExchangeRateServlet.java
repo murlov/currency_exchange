@@ -27,8 +27,15 @@ public class ExchangeRateServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        ExchangeRateService exchangeRateService = new ExchangeRateService();
+        ObjectMapper mapper = new ObjectMapper();
 
+        CurrencyPair currencyPair = parseCurrencyPair(request);
+
+        ExchangeRateResponse exchangeRateResponse = exchangeRateService.update(currencyPair);
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
     }
 
     private CurrencyPair parseCurrencyPair(HttpServletRequest request) {
