@@ -47,10 +47,10 @@ public class CurrenciesServlet extends BaseServlet {
         CurrencyValidator.validate(currencyCreateRequest);
 
         CurrencyService currencyService = new CurrencyService();
-        CurrencyResponse newCurrencyResponse;
-        newCurrencyResponse = currencyService.save(currencyCreateRequest);
+        CurrencyResponse currencyResponse;
+        currencyResponse = currencyService.save(currencyCreateRequest);
 
-        sendResponse(response, HttpServletResponse.SC_CREATED, newCurrencyResponse, mapper);
+        sendResponse(response, HttpServletResponse.SC_CREATED, currencyResponse, mapper);
     }
 
     private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
