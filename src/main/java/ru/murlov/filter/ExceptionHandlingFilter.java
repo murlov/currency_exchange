@@ -7,10 +7,7 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.murlov.exception.DuplicateCurrencyCodeException;
-import ru.murlov.exception.MethodNotAllowedException;
-import ru.murlov.exception.NotFoundException;
-import ru.murlov.exception.ValidationException;
+import ru.murlov.exception.*;
 
 import java.io.IOException;
 import java.util.Map;
@@ -24,7 +21,7 @@ public class ExceptionHandlingFilter extends HttpFilter {
             chain.doFilter(request, response);
         } catch (NotFoundException e) {
             sendError(response, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-        } catch (DuplicateCurrencyCodeException e) {
+        } catch (DuplicateCurrencyCodeException | DuplicateExchangeRateException e) {
             sendError(response, HttpServletResponse.SC_CONFLICT, e.getMessage());
         } catch (ValidationException e) {
             sendError(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
