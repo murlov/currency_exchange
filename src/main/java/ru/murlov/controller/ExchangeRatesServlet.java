@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import ru.murlov.dto.ExchangeRateCreateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
+import ru.murlov.exception.ValidationException;
 import ru.murlov.service.ExchangeRateService;
+import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +27,28 @@ public class ExchangeRatesServlet extends BaseServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        ExchangeRateService exchangeRateService = new ExchangeRateService();
+        ObjectMapper mapper = new ObjectMapper();
+
+        String baseCurrencyCode = FormatUtil.getRequiredNormalizedParameter(request, "baseCurrencyCode");
+        String targetCurrencyCode = FormatUtil.getRequiredNormalizedParameter(request, "targetCurrencyCode");
+
+        float rate;
+        try {
+            rate = Float.parseFloat(FormatUtil.getRequiredNormalizedParameter(request, "rate"));
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Rate must be a decimal number.");
+        }
+
+        ExchangeRateCreateRequest exchangeRateCreateRequest = new ExchangeRateCreateRequest(
+                baseCurrencyCode,
+                targetCurrencyCode,
+                rate
+        );
+
+        ExchangeRateResponse exchangeRateResponse = exchangeRateService.save(exchangeRateCreateRequest);
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
     }
 
     private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
