@@ -7,6 +7,7 @@ import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.mapper.CurrencyMapper;
 import ru.murlov.mapper.ExchangeRateMapper;
+import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
 
 import java.util.ArrayList;
@@ -30,11 +31,11 @@ public class ExchangeRateService {
         return exchangeRateResponses;
     }
 
-    public ExchangeRateResponse getByCodesPair(String baseCurrencyCode, String targetCurrencyCode) {
+    public ExchangeRateResponse getByCodesPair(CurrencyPair currencyPair) {
         ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
-        ExchangeRate exchangeRate = exchangeRateDao.getByCodesPair(baseCurrencyCode, targetCurrencyCode)
+        ExchangeRate exchangeRate = exchangeRateDao.getByCodesPair(currencyPair.baseCurrencyCode(), currencyPair.targetCurrencyCode())
                 .orElseThrow(() -> new NotFoundException("ExchangeRate not found: "
-                + baseCurrencyCode + " - " + targetCurrencyCode));
+                + currencyPair.baseCurrencyCode() + " - " + currencyPair.targetCurrencyCode()));
 
         return ExchangeRateMapper.toDto(exchangeRate);
     }

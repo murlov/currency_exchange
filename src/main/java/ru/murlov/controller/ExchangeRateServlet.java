@@ -22,7 +22,7 @@ public class ExchangeRateServlet extends HttpServlet {
 
         CurrencyPair currencyPair = parseCurrencyPair(request);
 
-        ExchangeRateResponse exchangeRateResponse = exchangeRateService.getByCodesPair(currencyPair.baseCurrencyCode(), currencyPair.targetCurrencyCode());
+        ExchangeRateResponse exchangeRateResponse = exchangeRateService.getByCodesPair(currencyPair);
         sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
     }
 
