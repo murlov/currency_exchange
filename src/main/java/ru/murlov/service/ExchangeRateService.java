@@ -43,6 +43,14 @@ public class ExchangeRateService {
 
     public ExchangeRateResponse save(ExchangeRateCreateRequest exchangeRateCreateRequest) {
         ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
+
+        ExchangeRate exchangeRate = createExchangeRate(exchangeRateCreateRequest);
+
+        ExchangeRate newExchangeRate = exchangeRateDao.save(exchangeRate);
+        return ExchangeRateMapper.toDto(newExchangeRate);
+    }
+
+    private ExchangeRate createExchangeRate(ExchangeRateCreateRequest exchangeRateCreateRequest) {
         CurrencyService currencyService = new CurrencyService();
 
         CurrencyResponse baseCurrencyResponse = currencyService.
@@ -50,13 +58,8 @@ public class ExchangeRateService {
         CurrencyResponse targetCurrencyResponse = currencyService
                 .getByCode(exchangeRateCreateRequest.targetCurrencyCode());
 
-        ExchangeRate exchangeRate = new ExchangeRate(
-                CurrencyMapper.toModel(baseCurrencyResponse),
-                CurrencyMapper.toModel(targetCurrencyResponse),
-                exchangeRateCreateRequest.rate()
-        );
-
-        ExchangeRate newExchangeRate = exchangeRateDao.save(exchangeRate);
-        return ExchangeRateMapper.toDto(newExchangeRate);
+        return ExchangeRateMapper.toModel(baseCurrencyResponse,
+                targetCurrencyResponse,
+                exchangeRateCreateRequest.rate());
     }
 }
