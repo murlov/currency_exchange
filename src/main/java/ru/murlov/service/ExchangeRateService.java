@@ -5,7 +5,6 @@ import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.dto.ExchangeRateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
-import ru.murlov.mapper.CurrencyMapper;
 import ru.murlov.mapper.ExchangeRateMapper;
 import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
