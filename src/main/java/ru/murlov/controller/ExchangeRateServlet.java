@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import ru.murlov.dto.ExchangeRateCreateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.exception.ValidationException;
 import ru.murlov.model.CurrencyPair;
 import ru.murlov.service.ExchangeRateService;
+import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
 
@@ -33,8 +35,15 @@ public class ExchangeRateServlet extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
 
         CurrencyPair currencyPair = parseCurrencyPair(request);
+        float rate = Float.parseFloat(FormatUtil.getRequiredNormalizedParameter(request, "rate"));
 
-        ExchangeRateResponse exchangeRateResponse = exchangeRateService.update(currencyPair);
+        ExchangeRateCreateRequest exchangeRateCreateRequest = new ExchangeRateCreateRequest(
+                currencyPair.baseCurrencyCode(),
+                currencyPair.targetCurrencyCode(),
+                rate
+        );
+
+        ExchangeRateResponse exchangeRateResponse = exchangeRateService.update(exchangeRateCreateRequest);
         sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
     }
 
