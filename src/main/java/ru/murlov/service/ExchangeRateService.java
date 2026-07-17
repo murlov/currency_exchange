@@ -50,6 +50,15 @@ public class ExchangeRateService {
         return ExchangeRateMapper.toDto(newExchangeRate);
     }
 
+    public ExchangeRateResponse update(ExchangeRateRequest exchangeRateRequest) {
+        ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
+
+        ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
+
+        ExchangeRate newExchangeRate = exchangeRateDao.update(exchangeRate);
+        return ExchangeRateMapper.toDto(newExchangeRate);
+    }
+
     private ExchangeRate createExchangeRate(ExchangeRateRequest exchangeRateRequest) {
         CurrencyService currencyService = new CurrencyService();
 
