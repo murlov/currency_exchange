@@ -2,7 +2,7 @@ package ru.murlov.service;
 
 import ru.murlov.dao.ExchangeRateDao;
 import ru.murlov.dto.CurrencyResponse;
-import ru.murlov.dto.ExchangeRateCreateRequest;
+import ru.murlov.dto.ExchangeRateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.mapper.CurrencyMapper;
@@ -41,10 +41,10 @@ public class ExchangeRateService {
     }
 
 
-    public ExchangeRateResponse save(ExchangeRateCreateRequest exchangeRateCreateRequest) {
+    public ExchangeRateResponse save(ExchangeRateRequest exchangeRateRequest) {
         ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
 
-        ExchangeRate exchangeRate = createExchangeRate(exchangeRateCreateRequest);
+        ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
 
         ExchangeRate newExchangeRate = exchangeRateDao.save(exchangeRate);
         return ExchangeRateMapper.toDto(newExchangeRate);
@@ -54,9 +54,9 @@ public class ExchangeRateService {
         CurrencyService currencyService = new CurrencyService();
 
         CurrencyResponse baseCurrencyResponse = currencyService.
-                getByCode(exchangeRateCreateRequest.baseCurrencyCode());
+                getByCode(exchangeRateRequest.baseCurrencyCode());
         CurrencyResponse targetCurrencyResponse = currencyService
-                .getByCode(exchangeRateCreateRequest.targetCurrencyCode());
+                .getByCode(exchangeRateRequest.targetCurrencyCode());
 
         return ExchangeRateMapper.toModel(baseCurrencyResponse,
                 targetCurrencyResponse,

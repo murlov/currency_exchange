@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import ru.murlov.dto.ExchangeRateCreateRequest;
+import ru.murlov.dto.ExchangeRateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.ValidationException;
 import ru.murlov.service.ExchangeRateService;
@@ -41,13 +41,13 @@ public class ExchangeRatesServlet extends BaseServlet {
             throw new ValidationException("Rate must be a decimal number.");
         }
 
-        ExchangeRateCreateRequest exchangeRateCreateRequest = new ExchangeRateCreateRequest(
+        ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(
                 baseCurrencyCode,
                 targetCurrencyCode,
                 rate
         );
 
-        ExchangeRateResponse exchangeRateResponse = exchangeRateService.save(exchangeRateCreateRequest);
+        ExchangeRateResponse exchangeRateResponse = exchangeRateService.save(exchangeRateRequest);
         sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
     }
 
