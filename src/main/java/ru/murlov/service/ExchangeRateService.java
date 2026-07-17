@@ -50,7 +50,7 @@ public class ExchangeRateService {
         return ExchangeRateMapper.toDto(newExchangeRate);
     }
 
-    private ExchangeRate createExchangeRate(ExchangeRateCreateRequest exchangeRateCreateRequest) {
+    private ExchangeRate createExchangeRate(ExchangeRateRequest exchangeRateRequest) {
         CurrencyService currencyService = new CurrencyService();
 
         CurrencyResponse baseCurrencyResponse = currencyService.
@@ -60,6 +60,6 @@ public class ExchangeRateService {
 
         return ExchangeRateMapper.toModel(baseCurrencyResponse,
                 targetCurrencyResponse,
-                exchangeRateCreateRequest.rate());
+                exchangeRateRequest.rate());
     }
 }
