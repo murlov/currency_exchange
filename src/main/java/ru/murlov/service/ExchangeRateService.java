@@ -5,6 +5,7 @@ import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.dto.ExchangeRateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
+import ru.murlov.exception.ValidationException;
 import ru.murlov.mapper.ExchangeRateMapper;
 import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
@@ -41,6 +42,9 @@ public class ExchangeRateService {
 
 
     public ExchangeRateResponse save(ExchangeRateRequest exchangeRateRequest) {
+        if (!isRateValid(exchangeRateRequest.rate())) {
+            throw new ValidationException("Rate must be bigger than zero");
+        }
         ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
 
         ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
@@ -50,6 +54,9 @@ public class ExchangeRateService {
     }
 
     public ExchangeRateResponse update(ExchangeRateRequest exchangeRateRequest) {
+        if (!isRateValid(exchangeRateRequest.rate())) {
+            throw new ValidationException("Rate must be bigger than zero");
+        }
         ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
 
         ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
@@ -60,6 +67,10 @@ public class ExchangeRateService {
                         + " - "
                         + exchangeRate.getTarget_currency().getCode()));
         return ExchangeRateMapper.toDto(newExchangeRate);
+    }
+
+    private boolean isRateValid(float rate) {
+        return rate > 0;
     }
 
     private ExchangeRate createExchangeRate(ExchangeRateRequest exchangeRateRequest) {
