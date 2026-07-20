@@ -35,7 +35,12 @@ public class ExchangeRateServlet extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
 
         CurrencyPair currencyPair = parseCurrencyPair(request);
-        float rate = Float.parseFloat(FormatUtil.getRequiredNormalizedParameter(request, "rate"));
+        float rate;
+        try {
+            rate = Float.parseFloat(FormatUtil.getRequiredNormalizedParameter(request, "rate"));
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Rate must be a decimal number.");
+        }
 
         ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(
                 currencyPair.baseCurrencyCode(),
