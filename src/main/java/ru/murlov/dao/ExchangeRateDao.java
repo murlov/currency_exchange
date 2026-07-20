@@ -51,6 +51,12 @@ public class ExchangeRateDao {
             VALUES (?, ?, ?)
             """;
 
+    private final static String UPDATE_SQL = """
+            UPDATE exchange_rates
+            SET rate = ?
+            WHERE base_currency_id = ? AND target_currency_id = ?
+            """;
+
     public List<ExchangeRate> getAll() {
 
         try (Connection connection = ConnectionManager.get();
@@ -119,6 +125,25 @@ public class ExchangeRateDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Optional<ExchangeRate> update(ExchangeRate exchangeRate) {
+        try (Connection connection = ConnectionManager.get();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+            statement.setFloat(1, exchangeRate.getRate());
+            statement.setInt(2, exchangeRate.getBase_currency().getId());
+            statement.setInt(3, exchangeRate.getTarget_currency().getId());
+
+            try {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return Optional.of(exchangeRate);
     }
 
     private boolean isDuplicateExchangeRate(SQLException e) {

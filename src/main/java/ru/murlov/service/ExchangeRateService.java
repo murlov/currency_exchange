@@ -54,7 +54,11 @@ public class ExchangeRateService {
 
         ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
 
-        ExchangeRate newExchangeRate = exchangeRateDao.update(exchangeRate);
+        ExchangeRate newExchangeRate = exchangeRateDao.update(exchangeRate)
+                .orElseThrow(() -> new NotFoundException("ExchangeRate not found: "
+                        + exchangeRate.getBase_currency().getCode()
+                        + " - "
+                        + exchangeRate.getTarget_currency().getCode()));
         return ExchangeRateMapper.toDto(newExchangeRate);
     }
 
