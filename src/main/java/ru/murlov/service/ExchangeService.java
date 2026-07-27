@@ -4,6 +4,7 @@ import ru.murlov.dao.ExchangeRateDao;
 import ru.murlov.dto.ExchangeRequest;
 import ru.murlov.dto.ExchangeResponse;
 import ru.murlov.exception.NotFoundException;
+import ru.murlov.exception.ValidationException;
 import ru.murlov.model.ExchangeRate;
 
 import java.util.Optional;
@@ -15,6 +16,10 @@ public class ExchangeService {
         CurrencyService currencyService = new CurrencyService();
         float convertedAmount;
         float newRate;
+
+        if (!amountIsValid(exchangeRequest.amount())) {
+            throw new ValidationException("Amount must be not less than zero");
+        }
 
         Optional<ExchangeRate> baseCurrencyToTargetCurrency = exchangeRateDao.getByCodesPair(
                 exchangeRequest.baseCurrencyCode(),
@@ -57,5 +62,9 @@ public class ExchangeService {
                 exchangeRequest.amount(),
                 convertedAmount
         );
+    }
+
+    private boolean amountIsValid(float amount) {
+        return amount >= 0;
     }
 }
