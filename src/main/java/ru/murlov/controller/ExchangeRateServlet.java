@@ -68,7 +68,7 @@ public class ExchangeRateServlet extends HttpServlet {
         String codesPair = parts[1];
         codesPair = codesPair.toUpperCase();
         if (!codesPair.matches("[A-Z]{6}")) {
-            throw new ValidationException("Currency codes pair must contain exactly 6 letters");
+            throw new ValidationException("Currency codes pair must contain exactly 6 uppercase letters");
         }
 
         String baseCurrencyCode = codesPair.substring(0,3);

@@ -25,7 +25,7 @@ public final class CurrencyValidator {
         requireNotBlank(code, "Currency code is required");
 
         if (!code.matches("[A-Z]{3}")) {
-            throw new ValidationException("Currency code must contain exactly 3 letters");
+            throw new ValidationException("Currency code must contain exactly 3 uppercase letters");
         }
     }
 

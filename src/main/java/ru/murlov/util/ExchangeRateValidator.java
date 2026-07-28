@@ -17,7 +17,7 @@ public class ExchangeRateValidator {
         requireNotBlank(baseCurrencyCode, "Base currency code is required");
 
         if (!baseCurrencyCode.matches("[A-Z]{3}")) {
-            throw new ValidationException("Base currency code must contain exactly 3 letters");
+            throw new ValidationException("Base currency code must contain exactly 3 uppercase letters");
         }
     }
 
@@ -25,7 +25,7 @@ public class ExchangeRateValidator {
         requireNotBlank(targetCurrencyCode, "Target currency code is required");
 
         if (!targetCurrencyCode.matches("[A-Z]{3}")) {
-            throw new ValidationException("Base currency code must contain exactly 3 letters");
+            throw new ValidationException("Base currency code must contain exactly 3 uppercase letters");
         }
     }
 
