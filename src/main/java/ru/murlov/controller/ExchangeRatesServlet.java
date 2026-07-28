@@ -8,6 +8,7 @@ import ru.murlov.dto.ExchangeRateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.ValidationException;
 import ru.murlov.service.ExchangeRateService;
+import ru.murlov.util.ExchangeRateValidator;
 import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class ExchangeRatesServlet extends BaseServlet {
                 rate
         );
 
-
+        ExchangeRateValidator.validate(exchangeRateRequest);
 
         ExchangeRateResponse exchangeRateResponse = exchangeRateService.save(exchangeRateRequest);
         sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
