@@ -21,12 +21,8 @@ public class ExchangeServlet extends HttpServlet {
 
         String baseCurrencyCode = FormatUtil.getRequiredNormalizedParameter(request, "from");
         String targetCurrencyCode = FormatUtil.getRequiredNormalizedParameter(request, "to");
-        float amount;
-        try {
-            amount = Float.parseFloat(FormatUtil.getRequiredNormalizedParameter(request, "amount"));
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Amount must be a decimal number");
-        }
+        float amount = parseAmount(request);
+
 
         ExchangeRequest exchangeRequest = new ExchangeRequest(
                 baseCurrencyCode,
@@ -35,6 +31,14 @@ public class ExchangeServlet extends HttpServlet {
 
         ExchangeResponse exchangeResponse = exchangeService.exchange(exchangeRequest);
         sendResponse(response, 200, exchangeResponse, mapper);
+    }
+
+    private float parseAmount(HttpServletRequest request) {
+        try {
+            return Float.parseFloat(FormatUtil.getRequiredNormalizedParameter(request, "amount"));
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Amount must be a decimal number");
+        }
     }
 
     private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
