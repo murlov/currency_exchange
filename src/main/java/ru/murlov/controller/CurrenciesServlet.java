@@ -34,9 +34,9 @@ public class CurrenciesServlet extends BaseServlet {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        String code = FormatUtil.getRequiredNormalizedParameter(request, "code");
-        String name = FormatUtil.getRequiredNormalizedParameter(request, "name");
-        String sign = FormatUtil.getRequiredNormalizedParameter(request, "sign");
+        String code = FormatUtil.getRequiredNormalizedStringParameter(request, "code");
+        String name = FormatUtil.getRequiredNormalizedStringParameter(request, "name");
+        String sign = FormatUtil.getRequiredNormalizedStringParameter(request, "sign");
 
         CurrencyCreateRequest currencyCreateRequest = new CurrencyCreateRequest(
                 code,

@@ -6,7 +6,6 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.murlov.dto.ExchangeRateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
-import ru.murlov.exception.ValidationException;
 import ru.murlov.service.ExchangeRateService;
 import ru.murlov.util.ExchangeRateValidator;
 import ru.murlov.util.FormatUtil;
@@ -32,9 +31,9 @@ public class ExchangeRatesServlet extends BaseServlet {
         ExchangeRateService exchangeRateService = new ExchangeRateService();
         ObjectMapper mapper = new ObjectMapper();
 
-        String baseCurrencyCode = FormatUtil.getRequiredNormalizedParameter(request, "baseCurrencyCode");
-        String targetCurrencyCode = FormatUtil.getRequiredNormalizedParameter(request, "targetCurrencyCode");
-        float rate = parseRate(request);
+        String baseCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "baseCurrencyCode");
+        String targetCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "targetCurrencyCode");
+        float rate = FormatUtil.getRequiredNormalizedFloatParameter(request, "rate");
 
         ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(
                 baseCurrencyCode,
@@ -48,13 +47,6 @@ public class ExchangeRatesServlet extends BaseServlet {
         sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
     }
 
-    private float parseRate(HttpServletRequest request) {
-        try {
-            return Float.parseFloat(FormatUtil.getRequiredNormalizedParameter(request, "rate"));
-        } catch (NumberFormatException e) {
-            throw new ValidationException("Rate must be a decimal number.");
-        }
-    }
     private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
         response.setStatus(status);
         mapper.writeValue(response.getWriter(), value);
