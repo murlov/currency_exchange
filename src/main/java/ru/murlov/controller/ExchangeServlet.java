@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.*;
 import ru.murlov.dto.ExchangeRequest;
 import ru.murlov.dto.ExchangeResponse;
 import ru.murlov.service.ExchangeService;
+import ru.murlov.util.ExchangeValidator;
 import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
@@ -28,6 +29,8 @@ public class ExchangeServlet extends HttpServlet {
                 baseCurrencyCode,
                 targetCurrencyCode,
                 amount);
+
+        ExchangeValidator.validate(exchangeRequest);
 
         ExchangeResponse exchangeResponse = exchangeService.exchange(exchangeRequest);
         sendResponse(response, 200, exchangeResponse, mapper);
