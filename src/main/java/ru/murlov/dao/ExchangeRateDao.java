@@ -5,6 +5,7 @@ import org.sqlite.SQLiteException;
 import ru.murlov.exception.DatabaseException;
 import ru.murlov.exception.DuplicateExchangeRateException;
 import ru.murlov.model.Currency;
+import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
 import ru.murlov.util.ConnectionManager;
 
@@ -76,11 +77,11 @@ public class ExchangeRateDao {
         }
     }
 
-    public Optional<ExchangeRate> getByCodesPair(String baseCurrencyCode, String targetCurrencyCode) {
+    public Optional<ExchangeRate> getByCodesPair(CurrencyPair currencyPair) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(GET_BY_CODES_PAIR_SQL)) {
-            statement.setString(1, baseCurrencyCode);
-            statement.setString(2, targetCurrencyCode);
+            statement.setString(1, currencyPair.baseCurrencyCode());
+            statement.setString(2, currencyPair.targetCurrencyCode());
 
             ResultSet resultSet = statement.executeQuery();
             ExchangeRate exchangeRate = null;

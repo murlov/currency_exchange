@@ -33,7 +33,7 @@ public class ExchangeRateService {
 
     public ExchangeRateResponse getByCodesPair(CurrencyPair currencyPair) {
         ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
-        ExchangeRate exchangeRate = exchangeRateDao.getByCodesPair(currencyPair.baseCurrencyCode(), currencyPair.targetCurrencyCode())
+        ExchangeRate exchangeRate = exchangeRateDao.getByCodesPair(currencyPair)
                 .orElseThrow(() -> new NotFoundException("ExchangeRate not found: "
                 + currencyPair.baseCurrencyCode() + " - " + currencyPair.targetCurrencyCode()));
 

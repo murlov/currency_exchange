@@ -5,6 +5,7 @@ import ru.murlov.dto.ExchangeRequest;
 import ru.murlov.dto.ExchangeResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.exception.ValidationException;
+import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
 
 import java.util.Optional;
@@ -22,23 +23,31 @@ public class ExchangeService {
         }
 
         Optional<ExchangeRate> baseCurrencyToTargetCurrency = exchangeRateDao.getByCodesPair(
-                exchangeRequest.baseCurrencyCode(),
-                exchangeRequest.targetCurrencyCode()
+                new CurrencyPair(
+                        exchangeRequest.baseCurrencyCode(),
+                        exchangeRequest.targetCurrencyCode()
+                )
         );
 
         Optional<ExchangeRate> targetCurrencyToBaseCurrency = exchangeRateDao.getByCodesPair(
-                exchangeRequest.targetCurrencyCode(),
-                exchangeRequest.baseCurrencyCode()
+                new CurrencyPair(
+                        exchangeRequest.targetCurrencyCode(),
+                        exchangeRequest.baseCurrencyCode()
+                )
         );
 
         Optional<ExchangeRate> USDToBaseCurrency = exchangeRateDao.getByCodesPair(
-                "USD",
-                exchangeRequest.baseCurrencyCode()
+                new CurrencyPair(
+                        "USD",
+                        exchangeRequest.baseCurrencyCode()
+                )
         );
 
         Optional<ExchangeRate> USDToTargetCurrency = exchangeRateDao.getByCodesPair(
-                "USD",
-                exchangeRequest.targetCurrencyCode()
+                new CurrencyPair(
+                        "USD",
+                        exchangeRequest.targetCurrencyCode()
+                )
         );
 
         if (baseCurrencyToTargetCurrency.isPresent()) {
