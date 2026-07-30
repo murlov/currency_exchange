@@ -1,16 +1,12 @@
-package ru.murlov.util;
+package ru.murlov.util.validator;
 
-import ru.murlov.dto.ExchangeRateRequest;
+import ru.murlov.dto.ExchangeRequest;
 import ru.murlov.exception.ValidationException;
 
-public class ExchangeRateValidator {
-    public static void validate(ExchangeRateRequest exchangeRateRequest) {
-        validateBaseCurrencyCode(exchangeRateRequest.baseCurrencyCode());
-        validateTargetCurrencyCode(exchangeRateRequest.targetCurrencyCode());
-
-        if (exchangeRateRequest.baseCurrencyCode().equals(exchangeRateRequest.targetCurrencyCode())) {
-            throw new ValidationException("Currency codes must be different");
-        }
+public class ExchangeValidator {
+    public static void validate(ExchangeRequest exchangeRequest) {
+        validateBaseCurrencyCode(exchangeRequest.baseCurrencyCode());
+        validateTargetCurrencyCode(exchangeRequest.targetCurrencyCode());
     }
 
     private static void validateBaseCurrencyCode(String baseCurrencyCode) {

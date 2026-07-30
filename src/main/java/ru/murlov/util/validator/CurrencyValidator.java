@@ -1,4 +1,4 @@
-package ru.murlov.util;
+package ru.murlov.util.validator;
 
 import ru.murlov.dto.CurrencyCreateRequest;
 import ru.murlov.exception.ValidationException;

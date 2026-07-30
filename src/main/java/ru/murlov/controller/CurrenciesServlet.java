@@ -8,7 +8,7 @@ import jakarta.servlet.annotation.*;
 import ru.murlov.dto.CurrencyCreateRequest;
 import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.service.CurrencyService;
-import ru.murlov.util.CurrencyValidator;
+import ru.murlov.util.validator.CurrencyValidator;
 import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;

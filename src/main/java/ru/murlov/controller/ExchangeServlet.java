@@ -7,7 +7,7 @@ import jakarta.servlet.annotation.*;
 import ru.murlov.dto.ExchangeRequest;
 import ru.murlov.dto.ExchangeResponse;
 import ru.murlov.service.ExchangeService;
-import ru.murlov.util.ExchangeValidator;
+import ru.murlov.util.validator.ExchangeValidator;
 import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
