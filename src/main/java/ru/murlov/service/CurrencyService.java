@@ -12,15 +12,19 @@ import java.util.List;
 
 public class CurrencyService {
 
+    private final CurrencyDao currencyDao;
+
+    public CurrencyService(CurrencyDao currencyDao) {
+        this.currencyDao = currencyDao;
+    }
+
     public CurrencyResponse getByCode(String code) {
-        CurrencyDao currencyDao = new CurrencyDao();
         Currency currency = currencyDao.getByCode(code)
                 .orElseThrow(() -> new NotFoundException("Currency not found: " + code));
         return CurrencyMapper.toDto(currency);
     }
 
     public List<CurrencyResponse> getAll() {
-        CurrencyDao currencyDao = new CurrencyDao();
         List<Currency> currencies = new ArrayList<>(currencyDao. getAll());
         List<CurrencyResponse> currencyResponses = new ArrayList<>();
         for (Currency currency : currencies) {
@@ -30,7 +34,6 @@ public class CurrencyService {
     }
 
     public CurrencyResponse save(CurrencyCreateRequest currencyCreateRequest) {
-        CurrencyDao currencyDao = new CurrencyDao();
         Currency currency = CurrencyMapper.toModel(currencyCreateRequest);
 
         Currency newCurrency = currencyDao.save(currency);

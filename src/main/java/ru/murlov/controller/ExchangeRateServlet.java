@@ -16,10 +16,27 @@ import java.io.IOException;
 
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends HttpServlet {
+
+    private ExchangeRateService exchangeRateService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        this.exchangeRateService =
+                (ExchangeRateService) getServletContext()
+                        .getAttribute("exchangeRateService");
+
+        if (exchangeRateService == null) {
+            throw new IllegalStateException(
+                    "ExchangeRateService is not initialized"
+            );
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-        ExchangeRateService exchangeRateService = new ExchangeRateService();
         ObjectMapper mapper = new ObjectMapper();
 
         CurrencyPair currencyPair = parseCurrencyPair(request);
@@ -31,7 +48,6 @@ public class ExchangeRateServlet extends HttpServlet {
     @Override
     protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-        ExchangeRateService exchangeRateService = new ExchangeRateService();
         ObjectMapper mapper = new ObjectMapper();
 
         CurrencyPair currencyPair = parseCurrencyPair(request);

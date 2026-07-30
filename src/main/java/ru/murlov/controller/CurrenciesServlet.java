@@ -2,6 +2,7 @@ package ru.murlov.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.murlov.dto.CurrencyCreateRequest;
@@ -16,13 +17,30 @@ import java.util.List;
 
 @WebServlet("/currencies")
 public class CurrenciesServlet extends BaseServlet {
+
+    private CurrencyService currencyService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        this.currencyService =
+                (CurrencyService) getServletContext()
+                        .getAttribute("currencyService");
+
+        if (currencyService == null) {
+            throw new IllegalStateException(
+                    "CurrencyService is not initialized"
+            );
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        CurrencyService currencyService = new CurrencyService();
         List<CurrencyResponse> currencyResponses = new ArrayList<>(currencyService.getAll());
 
         sendResponse(response, HttpServletResponse.SC_OK, currencyResponses, mapper);
@@ -46,7 +64,6 @@ public class CurrenciesServlet extends BaseServlet {
 
         CurrencyValidator.validate(currencyCreateRequest);
 
-        CurrencyService currencyService = new CurrencyService();
         CurrencyResponse currencyResponse;
         currencyResponse = currencyService.save(currencyCreateRequest);
 

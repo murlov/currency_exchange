@@ -14,10 +14,27 @@ import java.io.IOException;
 
 @WebServlet("/exchange")
 public class ExchangeServlet extends HttpServlet {
+
+    private ExchangeService exchangeService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        this.exchangeService =
+                (ExchangeService) getServletContext()
+                        .getAttribute("exchangeService");
+
+        if (exchangeService == null) {
+            throw new IllegalStateException(
+                    "ExchangeService is not initialized"
+            );
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-        ExchangeService exchangeService = new ExchangeService();
         ObjectMapper mapper = new ObjectMapper();
 
         String baseCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "from");

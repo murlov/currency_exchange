@@ -17,6 +17,22 @@ public class CurrencyServlet extends BaseServlet {
 
     private final static int EXPECTED_PATH_PARTS = 2;
     private final static int CODE_PART_INDEX = 1;
+    private CurrencyService currencyService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        this.currencyService =
+                (CurrencyService) getServletContext()
+                        .getAttribute("currencyService");
+
+        if (currencyService == null) {
+            throw new IllegalStateException(
+                    "CurrencyService is not initialized"
+            );
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,7 +50,6 @@ public class CurrencyServlet extends BaseServlet {
             throw new NotFoundException("Invalid path");
         }
 
-        CurrencyService currencyService = new CurrencyService();
         String code = parts[CODE_PART_INDEX];
         CurrencyResponse currencyResponse = currencyService.getByCode(code);
         sendResponse(response, HttpServletResponse.SC_OK, currencyResponse, mapper);

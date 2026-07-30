@@ -12,9 +12,15 @@ import java.util.Optional;
 
 public class ExchangeService {
 
+    private final ExchangeRateDao exchangeRateDao;
+    private final CurrencyService currencyService;
+
+    public ExchangeService(ExchangeRateDao exchangeRateDao, CurrencyService currencyService) {
+        this.exchangeRateDao = exchangeRateDao;
+        this.currencyService = currencyService;
+    }
+
     public ExchangeResponse exchange(ExchangeRequest exchangeRequest) {
-        ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
-        CurrencyService currencyService = new CurrencyService();
         float convertedAmount;
         float newRate;
 

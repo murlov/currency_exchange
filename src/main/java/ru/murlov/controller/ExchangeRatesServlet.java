@@ -15,10 +15,26 @@ import java.util.List;
 
 @WebServlet("/exchangeRates")
 public class ExchangeRatesServlet extends BaseServlet {
+
+    private ExchangeRateService exchangeRateService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        this.exchangeRateService =
+                (ExchangeRateService) getServletContext()
+                        .getAttribute("exchangeRateService");
+
+        if (exchangeRateService == null) {
+            throw new IllegalStateException(
+                    "ExchangeRateService is not initialized"
+            );
+        }
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-        ExchangeRateService exchangeRateService = new ExchangeRateService();
         ObjectMapper mapper = new ObjectMapper();
         List<ExchangeRateResponse> exchangeRateResponses = exchangeRateService.getAll();
 
@@ -28,7 +44,6 @@ public class ExchangeRatesServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-        ExchangeRateService exchangeRateService = new ExchangeRateService();
         ObjectMapper mapper = new ObjectMapper();
 
         String baseCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "baseCurrencyCode");

@@ -15,8 +15,15 @@ import java.util.List;
 
 public class ExchangeRateService {
 
+    private final ExchangeRateDao exchangeRateDao;
+    private final CurrencyService currencyService;
+
+    public ExchangeRateService(ExchangeRateDao exchangeRateDao, CurrencyService currencyService) {
+        this.exchangeRateDao = exchangeRateDao;
+        this.currencyService = currencyService;
+    }
+
     public List<ExchangeRateResponse> getAll() {
-        ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
         List<ExchangeRate> exchangeRates;
         List<ExchangeRateResponse> exchangeRateResponses = new ArrayList<>();
 
@@ -32,7 +39,6 @@ public class ExchangeRateService {
     }
 
     public ExchangeRateResponse getByCodesPair(CurrencyPair currencyPair) {
-        ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
         ExchangeRate exchangeRate = exchangeRateDao.getByCodesPair(currencyPair)
                 .orElseThrow(() -> new NotFoundException("ExchangeRate not found: "
                 + currencyPair.baseCurrencyCode() + " - " + currencyPair.targetCurrencyCode()));
@@ -45,7 +51,6 @@ public class ExchangeRateService {
         if (!isRateValid(exchangeRateRequest.rate())) {
             throw new ValidationException("Rate must be bigger than zero");
         }
-        ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
 
         ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
 
@@ -57,7 +62,6 @@ public class ExchangeRateService {
         if (!isRateValid(exchangeRateRequest.rate())) {
             throw new ValidationException("Rate must be bigger than zero");
         }
-        ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
 
         ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
 
@@ -74,7 +78,6 @@ public class ExchangeRateService {
     }
 
     private ExchangeRate createExchangeRate(ExchangeRateRequest exchangeRateRequest) {
-        CurrencyService currencyService = new CurrencyService();
 
         CurrencyResponse baseCurrencyResponse = currencyService.
                 getByCode(exchangeRateRequest.baseCurrencyCode());
