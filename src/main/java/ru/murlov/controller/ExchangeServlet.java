@@ -13,7 +13,7 @@ import ru.murlov.util.FormatUtil;
 import java.io.IOException;
 
 @WebServlet("/exchange")
-public class ExchangeServlet extends HttpServlet {
+public class ExchangeServlet extends BaseServlet {
 
     private ExchangeService exchangeService;
 
@@ -33,7 +33,7 @@ public class ExchangeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
 
