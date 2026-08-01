@@ -69,9 +69,4 @@ public class CurrenciesServlet extends BaseServlet {
 
         sendResponse(response, HttpServletResponse.SC_CREATED, currencyResponse, mapper);
     }
-
-    private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
-        response.setStatus(status);
-        mapper.writeValue(response.getWriter(), value);
-    }
 }

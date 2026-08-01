@@ -86,9 +86,4 @@ public class ExchangeRateServlet extends HttpServlet {
 
         return new CurrencyPair(baseCurrencyCode, targetCurrencyCode);
     }
-
-    private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
-        response.setStatus(status);
-        mapper.writeValue(response.getWriter(), value);
-    }
 }

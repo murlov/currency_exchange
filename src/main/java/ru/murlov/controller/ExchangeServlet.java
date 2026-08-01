@@ -52,9 +52,4 @@ public class ExchangeServlet extends HttpServlet {
         ExchangeResponse exchangeResponse = exchangeService.exchange(exchangeRequest);
         sendResponse(response, 200, exchangeResponse, mapper);
     }
-
-    private void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
-        response.setStatus(status);
-        mapper.writeValue(response.getWriter(), value);
-    }
 }

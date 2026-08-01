@@ -1,5 +1,6 @@
 package ru.murlov.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,5 +43,10 @@ public abstract class BaseServlet extends HttpServlet {
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         throw new MethodNotAllowedException("OPTIONS method is not supported for this endpoint");
+    }
+
+    protected void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
+        response.setStatus(status);
+        mapper.writeValue(response.getWriter(), value);
     }
 }
