@@ -36,7 +36,6 @@ public class ExchangeRateServlet extends BaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
 
         CurrencyPair currencyPair = parseCurrencyPair(request);
@@ -47,7 +46,6 @@ public class ExchangeRateServlet extends BaseServlet {
 
     @Override
     protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
 
         CurrencyPair currencyPair = parseCurrencyPair(request);

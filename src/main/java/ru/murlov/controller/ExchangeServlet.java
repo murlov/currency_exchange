@@ -34,7 +34,6 @@ public class ExchangeServlet extends BaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
 
         String baseCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "from");

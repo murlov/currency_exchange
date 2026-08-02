@@ -11,7 +11,6 @@ import java.io.IOException;
 public class NotFoundServlet extends BaseServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
         throw new NotFoundException("Invalid path");
     }
 }
