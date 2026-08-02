@@ -1,6 +1,8 @@
 package ru.murlov.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +11,26 @@ import ru.murlov.exception.MethodNotAllowedException;
 import java.io.IOException;
 
 public abstract class BaseServlet extends HttpServlet {
+
+    private ObjectMapper objectMapper;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        this.objectMapper =
+                (ObjectMapper) getServletContext()
+                        .getAttribute("objectMapper");
+
+        if (objectMapper == null) {
+            throw new IllegalStateException(
+                    "ObjectMapper is not initialized"
+            );
+        }
+
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         throw new MethodNotAllowedException("GET method is not supported for this endpoint");
@@ -44,8 +66,8 @@ public abstract class BaseServlet extends HttpServlet {
         throw new MethodNotAllowedException("OPTIONS method is not supported for this endpoint");
     }
 
-    protected void sendResponse(HttpServletResponse response, int status, Object value, ObjectMapper mapper) throws IOException {
+    protected void sendResponse(HttpServletResponse response, int status, Object value) throws IOException {
         response.setStatus(status);
-        mapper.writeValue(response.getWriter(), value);
+        objectMapper.writeValue(response.getWriter(), value);
     }
 }

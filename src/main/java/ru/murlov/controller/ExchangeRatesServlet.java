@@ -1,6 +1,5 @@
 package ru.murlov.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -34,16 +33,13 @@ public class ExchangeRatesServlet extends BaseServlet {
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
         List<ExchangeRateResponse> exchangeRateResponses = exchangeRateService.getAll();
 
-        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponses, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponses);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-
         String baseCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "baseCurrencyCode");
         String targetCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "targetCurrencyCode");
         float rate = FormatUtil.getRequiredNormalizedFloatParameter(request, "rate");
@@ -57,6 +53,6 @@ public class ExchangeRatesServlet extends BaseServlet {
         ExchangeRateValidator.validate(exchangeRateRequest);
 
         ExchangeRateResponse exchangeRateResponse = exchangeRateService.save(exchangeRateRequest);
-        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse);
     }
 }

@@ -1,6 +1,5 @@
 package ru.murlov.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -34,8 +33,6 @@ public class ExchangeServlet extends BaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-
         String baseCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "from");
         String targetCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "to");
         float amount = FormatUtil.getRequiredNormalizedFloatParameter(request, "amount");
@@ -49,6 +46,6 @@ public class ExchangeServlet extends BaseServlet {
         ExchangeValidator.validate(exchangeRequest);
 
         ExchangeResponse exchangeResponse = exchangeService.exchange(exchangeRequest);
-        sendResponse(response, 200, exchangeResponse, mapper);
+        sendResponse(response, 200, exchangeResponse);
     }
 }

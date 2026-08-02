@@ -1,7 +1,5 @@
 package ru.murlov.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -36,8 +34,6 @@ public class CurrencyServlet extends BaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
         String pathInfo = request.getPathInfo();
 
         if (pathInfo == null || pathInfo.isEmpty() || pathInfo.equals("/")) {
@@ -51,6 +47,6 @@ public class CurrencyServlet extends BaseServlet {
 
         String code = parts[CODE_PART_INDEX];
         CurrencyResponse currencyResponse = currencyService.getByCode(code);
-        sendResponse(response, HttpServletResponse.SC_OK, currencyResponse, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, currencyResponse);
     }
 }

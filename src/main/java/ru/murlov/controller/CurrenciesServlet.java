@@ -1,7 +1,5 @@
 package ru.murlov.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -37,19 +35,13 @@ public class CurrenciesServlet extends BaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
         List<CurrencyResponse> currencyResponses = new ArrayList<>(currencyService.getAll());
 
-        sendResponse(response, HttpServletResponse.SC_OK, currencyResponses, mapper);
+        sendResponse(response, HttpServletResponse.SC_OK, currencyResponses);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
         String code = FormatUtil.getRequiredNormalizedStringParameter(request, "code");
         String name = FormatUtil.getRequiredNormalizedStringParameter(request, "name");
         String sign = FormatUtil.getRequiredNormalizedStringParameter(request, "sign");
@@ -65,6 +57,6 @@ public class CurrenciesServlet extends BaseServlet {
         CurrencyResponse currencyResponse;
         currencyResponse = currencyService.save(currencyCreateRequest);
 
-        sendResponse(response, HttpServletResponse.SC_CREATED, currencyResponse, mapper);
+        sendResponse(response, HttpServletResponse.SC_CREATED, currencyResponse);
     }
 }

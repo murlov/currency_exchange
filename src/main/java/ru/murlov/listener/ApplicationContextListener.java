@@ -1,5 +1,6 @@
 package ru.murlov.listener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -15,6 +16,8 @@ public class ApplicationContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
         CurrencyDao currencyDao = new CurrencyDao();
         ExchangeRateDao exchangeRateDao = new ExchangeRateDao();
 
@@ -23,6 +26,8 @@ public class ApplicationContextListener implements ServletContextListener {
         ExchangeService exchangeService = new ExchangeService(exchangeRateDao, currencyService);
 
         ServletContext context = sce.getServletContext();
+
+        context.setAttribute("objectMapper", objectMapper);
 
         context.setAttribute("currencyService", currencyService);
         context.setAttribute("exchangeRateService", exchangeRateService);
