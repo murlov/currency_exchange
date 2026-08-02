@@ -40,8 +40,10 @@ public class ExchangeRatesServlet extends BaseServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String baseCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "baseCurrencyCode");
-        String targetCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "targetCurrencyCode");
+        String baseCurrencyCode = FormatUtil
+                .getRequiredNormalizedStringParameter(request, "baseCurrencyCode");
+        String targetCurrencyCode = FormatUtil
+                .getRequiredNormalizedStringParameter(request, "targetCurrencyCode");
         float rate = FormatUtil.getRequiredNormalizedFloatParameter(request, "rate");
 
         ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(

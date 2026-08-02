@@ -61,17 +61,23 @@ public class ExchangeRateServlet extends BaseServlet {
 
 
         if (pathInfo == null || pathInfo.isEmpty() || pathInfo.equals("/")) {
-            throw new ValidationException("Missing currency codes pair");
+            throw new ValidationException(
+                    "Missing currency codes pair"
+            );
         }
 
         String[] parts = pathInfo.split("/");
         if (parts.length != 2) {
-            throw new NotFoundException("Invalid path");
+            throw new NotFoundException(
+                    "Invalid path"
+            );
         }
 
         String codesPair = parts[1];
         if (!codesPair.matches("[A-Z]{6}")) {
-            throw new ValidationException("Currency codes pair must contain exactly 6 uppercase letters");
+            throw new ValidationException(
+                    "Currency codes pair must contain exactly 6 uppercase letters"
+            );
         }
 
         String baseCurrencyCode = codesPair.substring(0,3);
