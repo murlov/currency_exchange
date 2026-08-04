@@ -77,7 +77,7 @@ public class ExchangeService {
                 currencyService.getByCode(exchangeRequest.targetCurrencyCode()),
                 newRate,
                 exchangeRequest.amount(),
-                convertedAmount
+                convertedAmount.setScale(2, RoundingMode.HALF_UP)
         );
     }
 
