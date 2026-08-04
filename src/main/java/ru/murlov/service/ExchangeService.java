@@ -8,6 +8,8 @@ import ru.murlov.exception.ValidationException;
 import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 public class ExchangeService {
@@ -21,8 +23,8 @@ public class ExchangeService {
     }
 
     public ExchangeResponse exchange(ExchangeRequest exchangeRequest) {
-        float convertedAmount;
-        float newRate;
+        BigDecimal convertedAmount;
+        BigDecimal newRate;
 
         if (!amountIsValid(exchangeRequest.amount())) {
             throw new ValidationException("Amount must be not less than zero");
@@ -58,13 +60,13 @@ public class ExchangeService {
 
         if (baseCurrencyToTargetCurrency.isPresent()) {
             newRate = baseCurrencyToTargetCurrency.get().getRate();
-            convertedAmount = exchangeRequest.amount() * newRate;
+            convertedAmount = exchangeRequest.amount().multiply(newRate);
         } else if (targetCurrencyToBaseCurrency.isPresent()) {
-            newRate = 1 / targetCurrencyToBaseCurrency.get().getRate();
-            convertedAmount = exchangeRequest.amount() * newRate;
+            newRate = new BigDecimal("1").divide(targetCurrencyToBaseCurrency.get().getRate(), 2, RoundingMode.HALF_UP);
+            convertedAmount = exchangeRequest.amount().multiply(newRate);
         } else if (USDToBaseCurrency.isPresent() && USDToTargetCurrency.isPresent()) {
-            newRate = USDToTargetCurrency.get().getRate() / USDToBaseCurrency.get().getRate();
-            convertedAmount = exchangeRequest.amount() * newRate;
+            newRate = USDToTargetCurrency.get().getRate().divide(USDToBaseCurrency.get().getRate(), 2, RoundingMode.HALF_UP);
+            convertedAmount = exchangeRequest.amount().multiply(newRate);
         } else {
             throw new NotFoundException("Unable to perform exchange: no suitable exchange rate found");
         }
@@ -79,7 +81,8 @@ public class ExchangeService {
         );
     }
 
-    private boolean amountIsValid(float amount) {
-        return amount >= 0;
+    private boolean amountIsValid(BigDecimal amount) {
+        BigDecimal value = new BigDecimal("0");
+        return amount.compareTo(value) == 0 || amount.compareTo(value) > 0;
     }
 }

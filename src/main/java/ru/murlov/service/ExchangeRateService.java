@@ -10,6 +10,7 @@ import ru.murlov.mapper.ExchangeRateMapper;
 import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,8 +74,9 @@ public class ExchangeRateService {
         return ExchangeRateMapper.toDto(newExchangeRate);
     }
 
-    private boolean isRateValid(float rate) {
-        return rate > 0;
+    private boolean isRateValid(BigDecimal rate) {
+        BigDecimal value = new BigDecimal("0");
+        return rate.compareTo(value) > 0;
     }
 
     private ExchangeRate createExchangeRate(ExchangeRateRequest exchangeRateRequest) {

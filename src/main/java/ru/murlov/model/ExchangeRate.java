@@ -1,20 +1,22 @@
 package ru.murlov.model;
 
+import java.math.BigDecimal;
+
 public class ExchangeRate {
 
     private int id;
     private Currency base_currency;
     private Currency target_currency;
-    private float rate;
+    private BigDecimal rate;
 
-    public ExchangeRate(int id, Currency base_currency, Currency target_currency, float rate) {
+    public ExchangeRate(int id, Currency base_currency, Currency target_currency, BigDecimal rate) {
         this.id = id;
         this.base_currency = base_currency;
         this.target_currency = target_currency;
         this.rate = rate;
     }
 
-    public ExchangeRate(Currency base_currency, Currency target_currency, float rate) {
+    public ExchangeRate(Currency base_currency, Currency target_currency, BigDecimal rate) {
         this.base_currency = base_currency;
         this.target_currency = target_currency;
         this.rate = rate;
@@ -44,11 +46,11 @@ public class ExchangeRate {
         this.target_currency = target_currency;
     }
 
-    public float getRate() {
+    public BigDecimal getRate() {
         return rate;
     }
 
-    public void setRate(float rate) {
+    public void setRate(BigDecimal rate) {
         this.rate = rate;
     }
 

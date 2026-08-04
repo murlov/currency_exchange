@@ -10,6 +10,7 @@ import ru.murlov.util.validator.ExchangeValidator;
 import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 @WebServlet("/exchange")
 public class ExchangeServlet extends BaseServlet {
@@ -35,7 +36,7 @@ public class ExchangeServlet extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String baseCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "from");
         String targetCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "to");
-        float amount = FormatUtil.getRequiredNormalizedFloatParameter(request, "amount");
+        BigDecimal amount = FormatUtil.getRequiredNormalizedBigDecimalParameter(request, "amount");
 
 
         ExchangeRequest exchangeRequest = new ExchangeRequest(

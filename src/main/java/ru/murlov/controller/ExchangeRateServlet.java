@@ -12,6 +12,7 @@ import ru.murlov.service.ExchangeRateService;
 import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends BaseServlet {
@@ -44,7 +45,7 @@ public class ExchangeRateServlet extends BaseServlet {
     @Override
     protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         CurrencyPair currencyPair = parseCurrencyPair(request);
-        float rate = FormatUtil.getRequiredNormalizedFloatParameter(request, "rate");
+        BigDecimal rate = FormatUtil.getRequiredNormalizedBigDecimalParameter(request, "rate");
 
         ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(
                 currencyPair.baseCurrencyCode(),

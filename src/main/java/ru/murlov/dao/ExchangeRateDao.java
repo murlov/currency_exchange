@@ -100,7 +100,7 @@ public class ExchangeRateDao {
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
             statement.setInt(1, exchangeRate.getBase_currency().getId());
             statement.setInt(2, exchangeRate.getTarget_currency().getId());
-            statement.setFloat(3, exchangeRate.getRate());
+            statement.setBigDecimal(3, exchangeRate.getRate());
 
             try {
                 statement.executeUpdate();
@@ -131,7 +131,7 @@ public class ExchangeRateDao {
     public Optional<ExchangeRate> update(ExchangeRate exchangeRate) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
-            statement.setFloat(1, exchangeRate.getRate());
+            statement.setBigDecimal(1, exchangeRate.getRate());
             statement.setInt(2, exchangeRate.getBase_currency().getId());
             statement.setInt(3, exchangeRate.getTarget_currency().getId());
 
@@ -169,7 +169,7 @@ public class ExchangeRateDao {
                 resultSet.getInt("id"),
                 baseCurrency,
                 targetCurrency,
-                resultSet.getFloat("rate")
+                resultSet.getBigDecimal("rate")
         );
     }
 }

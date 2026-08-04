@@ -1,7 +1,9 @@
 package ru.murlov.dto;
 
-    public record ExchangeRateResponse (int id,
-                                        CurrencyResponse base_currency,
-                                        CurrencyResponse target_currency,
-                                        float rate) {
+import java.math.BigDecimal;
+
+public record ExchangeRateResponse (int id,
+                                    CurrencyResponse base_currency,
+                                    CurrencyResponse target_currency,
+                                    BigDecimal rate) {
 }

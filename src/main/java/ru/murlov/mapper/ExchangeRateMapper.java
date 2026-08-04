@@ -4,6 +4,8 @@ import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.model.ExchangeRate;
 
+import java.math.BigDecimal;
+
 public class ExchangeRateMapper {
 
     public static ExchangeRateResponse toDto(ExchangeRate exchangeRate) {
@@ -17,7 +19,7 @@ public class ExchangeRateMapper {
 
     public static ExchangeRate toModel(CurrencyResponse baseCurrencyResponse,
                                        CurrencyResponse targetCurrencyResponse,
-                                       Float rate) {
+                                       BigDecimal rate) {
                 return new ExchangeRate(CurrencyMapper.toModel(baseCurrencyResponse),
                         CurrencyMapper.toModel(targetCurrencyResponse),
                         rate

@@ -10,6 +10,7 @@ import ru.murlov.util.validator.ExchangeRateValidator;
 import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @WebServlet("/exchangeRates")
@@ -44,7 +45,7 @@ public class ExchangeRatesServlet extends BaseServlet {
                 .getRequiredNormalizedStringParameter(request, "baseCurrencyCode");
         String targetCurrencyCode = FormatUtil
                 .getRequiredNormalizedStringParameter(request, "targetCurrencyCode");
-        float rate = FormatUtil.getRequiredNormalizedFloatParameter(request, "rate");
+        BigDecimal rate = FormatUtil.getRequiredNormalizedBigDecimalParameter(request, "rate");
 
         ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(
                 baseCurrencyCode,

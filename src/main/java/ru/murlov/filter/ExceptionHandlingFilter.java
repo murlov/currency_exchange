@@ -2,7 +2,6 @@ package ru.murlov.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +15,7 @@ import java.util.Map;
 public class ExceptionHandlingFilter extends HttpFilter {
 
     @Override
-    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
         try {
             chain.doFilter(request, response);
         } catch (NotFoundException e) {

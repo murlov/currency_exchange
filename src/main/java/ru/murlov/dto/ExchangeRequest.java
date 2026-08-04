@@ -1,6 +1,8 @@
 package ru.murlov.dto;
 
+import java.math.BigDecimal;
+
 public record ExchangeRequest(String baseCurrencyCode,
                               String targetCurrencyCode,
-                              float amount) {
+                              BigDecimal amount) {
 }
