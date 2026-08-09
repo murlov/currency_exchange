@@ -20,7 +20,9 @@ public class CurrencyService {
 
     public CurrencyResponse getByCode(String code) {
         Currency currency = currencyDao.getByCode(code)
-                .orElseThrow(() -> new NotFoundException("Currency not found: " + code));
+                .orElseThrow(() -> new NotFoundException(
+                        "Currency not found: " + code
+                ));
         return CurrencyMapper.toDto(currency);
     }
 
@@ -36,7 +38,10 @@ public class CurrencyService {
     public CurrencyResponse save(CurrencyCreateRequest currencyCreateRequest) {
         Currency currency = CurrencyMapper.toModel(currencyCreateRequest);
 
-        Currency newCurrency = currencyDao.save(currency);
+        Currency newCurrency = currencyDao.save(currency)
+                .orElseThrow(() -> new NotFoundException(
+                        "Failed to save currency"
+                ));
         return CurrencyMapper.toDto(newCurrency);
     }
 }

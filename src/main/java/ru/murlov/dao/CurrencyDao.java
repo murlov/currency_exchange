@@ -77,7 +77,9 @@ public class CurrencyDao {
         }
     }
 
-    public Currency save(Currency currency) {
+    public Optional<Currency> save(Currency currency) {
+        Currency savedCurrency = null;
+
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, currency.getCode());
@@ -96,10 +98,15 @@ public class CurrencyDao {
             }
             ResultSet keys = statement.getGeneratedKeys();
             if (keys.next()) {
-                currency.setId(keys.getInt(1));
+                savedCurrency = new Currency(
+                        keys.getInt(1),
+                        currency.getCode(),
+                        currency.getName(),
+                        currency.getSign()
+                );
             }
 
-            return currency;
+            return Optional.ofNullable(savedCurrency);
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
