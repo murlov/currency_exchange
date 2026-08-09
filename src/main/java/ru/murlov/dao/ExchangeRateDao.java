@@ -95,7 +95,9 @@ public class ExchangeRateDao {
         }
     }
 
-    public ExchangeRate save(ExchangeRate exchangeRate) {
+    public Optional<ExchangeRate> save(ExchangeRate exchangeRate) {
+        ExchangeRate savedExchangeRate = null;
+
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
             statement.setInt(1, exchangeRate.getBase_currency().getId());
@@ -119,10 +121,15 @@ public class ExchangeRateDao {
 
             ResultSet keys = statement.getGeneratedKeys();
             if (keys.next()) {
-                exchangeRate.setId(keys.getInt(1));
+                savedExchangeRate = new ExchangeRate(
+                        keys.getInt(1),
+                        exchangeRate.getBase_currency(),
+                        exchangeRate.getTarget_currency(),
+                        exchangeRate.getRate()
+                );
             }
 
-            return exchangeRate;
+            return Optional.ofNullable(savedExchangeRate);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

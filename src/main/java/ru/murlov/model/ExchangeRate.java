@@ -26,10 +26,6 @@ public class ExchangeRate {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public Currency getBase_currency() {
         return base_currency;
     }
