@@ -3,7 +3,7 @@ package ru.murlov.util.validator;
 import ru.murlov.dto.ExchangeRequest;
 import ru.murlov.exception.ValidationException;
 
-public class ExchangeValidator {
+public final class ExchangeValidator {
     public static void validate(ExchangeRequest exchangeRequest) {
         validateBaseCurrencyCode(exchangeRequest.baseCurrencyCode());
         validateTargetCurrencyCode(exchangeRequest.targetCurrencyCode());
