@@ -2,12 +2,12 @@ package ru.murlov.model;
 
 public class Currency {
 
-    private int id;
+    private Long id;
     private final String code;
     private final String name;
     private final String sign;
 
-    public Currency(int id, String code, String name, String sign) {
+    public Currency(Long id, String code, String name, String sign) {
         this.id = id;
         this.code = code;
         this.name = name;
@@ -20,7 +20,7 @@ public class Currency {
         this.sign = sign;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

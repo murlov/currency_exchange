@@ -43,7 +43,7 @@ public class CurrencyDao {
 
             if (resultSet.next()) {
                 currency = new Currency(
-                        resultSet.getInt("id"),
+                        resultSet.getLong("id"),
                         resultSet.getString("code"),
                         resultSet.getString("full_name"),
                         resultSet.getString("sign"));
@@ -63,7 +63,7 @@ public class CurrencyDao {
             while (resultSet.next()) {
                 currencies.add(
                         new Currency(
-                                resultSet.getInt("id"),
+                                resultSet.getLong("id"),
                                 resultSet.getString("code"),
                                 resultSet.getString("full_name"),
                                 resultSet.getString("sign")
@@ -99,7 +99,7 @@ public class CurrencyDao {
             ResultSet keys = statement.getGeneratedKeys();
             if (keys.next()) {
                 savedCurrency = new Currency(
-                        keys.getInt(1),
+                        keys.getLong(1),
                         currency.getCode(),
                         currency.getName(),
                         currency.getSign()

@@ -100,8 +100,8 @@ public class ExchangeRateDao {
 
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
-            statement.setInt(1, exchangeRate.getBase_currency().getId());
-            statement.setInt(2, exchangeRate.getTarget_currency().getId());
+            statement.setLong(1, exchangeRate.getBase_currency().getId());
+            statement.setLong(2, exchangeRate.getTarget_currency().getId());
             statement.setBigDecimal(3, exchangeRate.getRate());
 
             try {
@@ -122,7 +122,7 @@ public class ExchangeRateDao {
             ResultSet keys = statement.getGeneratedKeys();
             if (keys.next()) {
                 savedExchangeRate = new ExchangeRate(
-                        keys.getInt(1),
+                        keys.getLong(1),
                         exchangeRate.getBase_currency(),
                         exchangeRate.getTarget_currency(),
                         exchangeRate.getRate()
@@ -139,8 +139,8 @@ public class ExchangeRateDao {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
             statement.setBigDecimal(1, exchangeRate.getRate());
-            statement.setInt(2, exchangeRate.getBase_currency().getId());
-            statement.setInt(3, exchangeRate.getTarget_currency().getId());
+            statement.setLong(2, exchangeRate.getBase_currency().getId());
+            statement.setLong(3, exchangeRate.getTarget_currency().getId());
 
             try {
                 statement.executeUpdate();
@@ -161,19 +161,19 @@ public class ExchangeRateDao {
 
     private ExchangeRate getExchangeRate (ResultSet resultSet) throws SQLException {
         Currency baseCurrency = new Currency(
-                resultSet.getInt("base_currency_id"),
+                resultSet.getLong("base_currency_id"),
                 resultSet.getString("base_currency_code"),
                 resultSet.getString("base_currency_name"),
                 resultSet.getString("base_currency_sign")
         );
         Currency targetCurrency = new Currency(
-                resultSet.getInt("target_currency_id"),
+                resultSet.getLong("target_currency_id"),
                 resultSet.getString("target_currency_code"),
                 resultSet.getString("target_currency_name"),
                 resultSet.getString("target_currency_sign")
         );
         return new ExchangeRate(
-                resultSet.getInt("id"),
+                resultSet.getLong("id"),
                 baseCurrency,
                 targetCurrency,
                 resultSet.getBigDecimal("rate")
