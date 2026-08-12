@@ -131,7 +131,7 @@ public class ExchangeRateDao {
 
             return Optional.ofNullable(savedExchangeRate);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 
@@ -145,10 +145,10 @@ public class ExchangeRateDao {
             try {
                 statement.executeUpdate();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new DatabaseException(e);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
 
         return Optional.of(exchangeRate);
