@@ -24,12 +24,34 @@ public class ExchangeService {
 
     public ExchangeResponse exchange(ExchangeRequest exchangeRequest) {
         BigDecimal convertedAmount;
-        BigDecimal newRate;
 
         if (!amountIsValid(exchangeRequest.amount())) {
             throw new ValidationException("Amount must be not less than zero");
         }
 
+        BigDecimal rate = getRate(exchangeRequest);
+
+        convertedAmount = exchangeRequest.amount().multiply(rate);
+
+        return new ExchangeResponse(
+                currencyService.getByCode(exchangeRequest.baseCurrencyCode()),
+                currencyService.getByCode(exchangeRequest.targetCurrencyCode()),
+                rate,
+                exchangeRequest.amount(),
+                convertedAmount.setScale(2, RoundingMode.HALF_UP)
+        );
+    }
+
+    private BigDecimal getRate(ExchangeRequest exchangeRequest) {
+        return getDirect(exchangeRequest)
+                .or(() -> getReverse(exchangeRequest))
+                .or(() -> getCross(exchangeRequest))
+                .orElseThrow(() -> new NotFoundException(
+                        "Unable to perform exchange: no suitable exchange rate found"
+                ));
+    }
+
+    private Optional<BigDecimal> getDirect(ExchangeRequest exchangeRequest) {
         Optional<ExchangeRate> baseCurrencyToTargetCurrency = exchangeRateDao.getByCodesPair(
                 new CurrencyPair(
                         exchangeRequest.baseCurrencyCode(),
@@ -37,6 +59,10 @@ public class ExchangeService {
                 )
         );
 
+        return baseCurrencyToTargetCurrency.map(ExchangeRate::getRate);
+    }
+
+    private Optional<BigDecimal> getReverse(ExchangeRequest exchangeRequest) {
         Optional<ExchangeRate> targetCurrencyToBaseCurrency = exchangeRateDao.getByCodesPair(
                 new CurrencyPair(
                         exchangeRequest.targetCurrencyCode(),
@@ -44,6 +70,16 @@ public class ExchangeService {
                 )
         );
 
+        return targetCurrencyToBaseCurrency.map(
+                exchangeRate -> new BigDecimal("1").divide(
+                        exchangeRate.getRate(),
+                        2,
+                        RoundingMode.HALF_UP
+                )
+        );
+    }
+
+    private Optional<BigDecimal> getCross(ExchangeRequest exchangeRequest) {
         Optional<ExchangeRate> USDToBaseCurrency = exchangeRateDao.getByCodesPair(
                 new CurrencyPair(
                         "USD",
@@ -58,27 +94,19 @@ public class ExchangeService {
                 )
         );
 
-        if (baseCurrencyToTargetCurrency.isPresent()) {
-            newRate = baseCurrencyToTargetCurrency.get().getRate();
-            convertedAmount = exchangeRequest.amount().multiply(newRate);
-        } else if (targetCurrencyToBaseCurrency.isPresent()) {
-            newRate = new BigDecimal("1").divide(targetCurrencyToBaseCurrency.get().getRate(), 2, RoundingMode.HALF_UP);
-            convertedAmount = exchangeRequest.amount().multiply(newRate);
-        } else if (USDToBaseCurrency.isPresent() && USDToTargetCurrency.isPresent()) {
-            newRate = USDToTargetCurrency.get().getRate().divide(USDToBaseCurrency.get().getRate(), 2, RoundingMode.HALF_UP);
-            convertedAmount = exchangeRequest.amount().multiply(newRate);
+        if (USDToBaseCurrency.isPresent() && USDToTargetCurrency.isPresent()) {
+            BigDecimal USDToTargetCurrencyRate = USDToTargetCurrency.get().getRate();
+            BigDecimal USDToBaseCurrencyRate = USDToBaseCurrency.get().getRate();
+            return Optional.of(
+                    USDToTargetCurrencyRate.divide(
+                            USDToBaseCurrencyRate,
+                            2,
+                            RoundingMode.HALF_UP
+                    )
+            );
         } else {
-            throw new NotFoundException("Unable to perform exchange: no suitable exchange rate found");
+            return Optional.empty();
         }
-
-
-        return new ExchangeResponse(
-                currencyService.getByCode(exchangeRequest.baseCurrencyCode()),
-                currencyService.getByCode(exchangeRequest.targetCurrencyCode()),
-                newRate,
-                exchangeRequest.amount(),
-                convertedAmount.setScale(2, RoundingMode.HALF_UP)
-        );
     }
 
     private boolean amountIsValid(BigDecimal amount) {
