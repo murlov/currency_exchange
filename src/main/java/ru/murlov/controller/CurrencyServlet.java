@@ -13,8 +13,8 @@ import java.io.IOException;
 @WebServlet("/currency/*")
 public class CurrencyServlet extends BaseServlet {
 
-    private final static int EXPECTED_PATH_PARTS = 2;
-    private final static int CODE_PART_INDEX = 1;
+    private static final int EXPECTED_PATH_PARTS = 2;
+    private static final int CODE_PART_INDEX = 1;
     private CurrencyService currencyService;
 
     @Override

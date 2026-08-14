@@ -17,6 +17,13 @@ import java.math.BigDecimal;
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends BaseServlet {
 
+    private static final int EXPECTED_PATH_PARTS = 2;
+    private static final int CODES_PAIR_PART_INDEX = 1;
+    private static final int CODES_PAIR_LENGTH = 6;
+    private static final int BASE_CODE_START_INDEX = 0;
+    private static final int BASE_CODE_END_INDEX = 3;
+    private static final int TARGET_CODE_START_INDEX = 3;
+    private static final int TARGET_CODE_END_INDEX = 6;
     private ExchangeRateService exchangeRateService;
 
     @Override
@@ -68,21 +75,27 @@ public class ExchangeRateServlet extends BaseServlet {
         }
 
         String[] parts = pathInfo.split("/");
-        if (parts.length != 2) {
+        if (parts.length != EXPECTED_PATH_PARTS) {
             throw new NotFoundException(
                     "Invalid path"
             );
         }
 
-        String codesPair = parts[1];
-        if (!codesPair.matches("[A-Z]{6}")) {
+        String codesPair = parts[CODES_PAIR_PART_INDEX];
+        if (!codesPair.matches("[A-Z]{" + CODES_PAIR_LENGTH + "}")) {
             throw new ValidationException(
                     "Currency codes pair must contain exactly 6 uppercase letters"
             );
         }
 
-        String baseCurrencyCode = codesPair.substring(0,3);
-        String targetCurrencyCode = codesPair.substring(3, 6);
+        String baseCurrencyCode = codesPair.substring(
+                BASE_CODE_START_INDEX,
+                BASE_CODE_END_INDEX
+        );
+        String targetCurrencyCode = codesPair.substring(
+                TARGET_CODE_START_INDEX,
+                TARGET_CODE_END_INDEX
+        );
 
         return new CurrencyPair(baseCurrencyCode, targetCurrencyCode);
     }

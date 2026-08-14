@@ -16,6 +16,7 @@ public class ExchangeService {
 
     private final ExchangeRateDao exchangeRateDao;
     private final CurrencyService currencyService;
+    private static final int NUMBER_OF_DECIMALS = 2;
 
     public ExchangeService(ExchangeRateDao exchangeRateDao, CurrencyService currencyService) {
         this.exchangeRateDao = exchangeRateDao;
@@ -38,7 +39,7 @@ public class ExchangeService {
                 currencyService.getByCode(exchangeRequest.targetCurrencyCode()),
                 rate,
                 exchangeRequest.amount(),
-                convertedAmount.setScale(2, RoundingMode.HALF_UP)
+                convertedAmount.setScale(NUMBER_OF_DECIMALS, RoundingMode.HALF_UP)
         );
     }
 
@@ -73,7 +74,7 @@ public class ExchangeService {
         return targetCurrencyToBaseCurrency.map(
                 exchangeRate -> new BigDecimal("1").divide(
                         exchangeRate.getRate(),
-                        2,
+                        NUMBER_OF_DECIMALS,
                         RoundingMode.HALF_UP
                 )
         );
@@ -100,7 +101,7 @@ public class ExchangeService {
             return Optional.of(
                     USDToTargetCurrencyRate.divide(
                             USDToBaseCurrencyRate,
-                            2,
+                            NUMBER_OF_DECIMALS,
                             RoundingMode.HALF_UP
                     )
             );

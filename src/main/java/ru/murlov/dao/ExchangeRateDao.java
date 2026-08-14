@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class ExchangeRateDao {
 
-    private final static String GET_ALL_SQL = """
+    private static final String GET_ALL_SQL = """
             SELECT
             er.id,
             
@@ -40,19 +40,19 @@ public class ExchangeRateDao {
             JOIN currencies tc ON er.target_currency_id = tc.id
             """;
 
-    private final static String GET_BY_CODES_PAIR_SQL =
+    private static final String GET_BY_CODES_PAIR_SQL =
             GET_ALL_SQL +
             """
             WHERE bc.code = ? AND tc.code = ?
             """;
 
-    private final static String SAVE_SQL = """
+    private static final String SAVE_SQL = """
             INSERT INTO exchange_rates
             (base_currency_id, target_currency_id, rate)
             VALUES (?, ?, ?)
             """;
 
-    private final static String UPDATE_SQL = """
+    private static final String UPDATE_SQL = """
             UPDATE exchange_rates
             SET rate = ?
             WHERE base_currency_id = ? AND target_currency_id = ?

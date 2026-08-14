@@ -17,17 +17,17 @@ import java.util.Optional;
 
 public class CurrencyDao {
 
-    private final static String GET_BY_CODE_SQL = """
+    private static final String GET_BY_CODE_SQL = """
                                             SELECT * FROM currencies
                                             WHERE code = ?
                                            """;
 
-    private final static String GET_ALL_SQL = """
+    private static final String GET_ALL_SQL = """
             SELECT id, code, full_name, sign
             FROM currencies
             """;
 
-    private final static String SAVE_SQL = """
+    private static final String SAVE_SQL = """
             INSERT INTO currencies
             (code, full_name, sign)
             VALUES (?, ?, ?)

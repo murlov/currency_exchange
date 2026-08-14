@@ -8,6 +8,10 @@ import java.math.RoundingMode;
 
 public final class FormatUtil {
 
+    public static final int FIRST_LETTER_START = 0;
+    public static final int FIRST_LETTER_END = 1;
+    public static final int NUMBER_OF_DECIMALS = 2;
+
     private FormatUtil() {}
 
     public static String getRequiredNormalizedStringParameter(HttpServletRequest request, String parameterName) {
@@ -25,10 +29,12 @@ public final class FormatUtil {
             throw new ValidationException("Parameter '" + parameterName + "' is required");
         }
 
-        String capitalizedParameterName = parameterName.substring(0,1).toUpperCase() + parameterName.substring(1);
+        String capitalizedParameterName = parameterName.substring(FIRST_LETTER_START,FIRST_LETTER_END)
+                .toUpperCase() + parameterName.substring(FIRST_LETTER_END);
+
         BigDecimal result;
         try {
-            result = new BigDecimal(text.strip()).setScale(2, RoundingMode.HALF_UP);
+            result = new BigDecimal(text.strip()).setScale(NUMBER_OF_DECIMALS, RoundingMode.HALF_UP);
         } catch (NumberFormatException e) {
             throw new ValidationException(capitalizedParameterName + " must be a decimal number.");
         }

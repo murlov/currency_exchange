@@ -47,6 +47,6 @@ public class ExchangeServlet extends BaseServlet {
         ExchangeValidator.validate(exchangeRequest);
 
         ExchangeResponse exchangeResponse = exchangeService.exchange(exchangeRequest);
-        sendResponse(response, 200, exchangeResponse);
+        sendResponse(response, HttpServletResponse.SC_OK, exchangeResponse);
     }
 }
