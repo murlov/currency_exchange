@@ -75,9 +75,7 @@ public abstract class BaseServlet extends HttpServlet {
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) {
-        throw new MethodNotAllowedException(
-                "OPTIONS method is not supported for this endpoint"
-        );
+        resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     protected void sendResponse(HttpServletResponse response, int status, Object value) throws IOException {
