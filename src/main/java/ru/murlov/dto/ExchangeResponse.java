@@ -2,8 +2,8 @@ package ru.murlov.dto;
 
 import java.math.BigDecimal;
 
-public record ExchangeResponse(CurrencyResponse base_currency,
-                               CurrencyResponse target_currency,
+public record ExchangeResponse(CurrencyResponse baseCurrency,
+                               CurrencyResponse targetCurrency,
                                BigDecimal rate,
                                BigDecimal amount,
                                BigDecimal convertedAmount) {
