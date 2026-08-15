@@ -135,7 +135,7 @@ public class ExchangeRateDao {
         }
     }
 
-    public Optional<ExchangeRate> update(ExchangeRate exchangeRate) {
+    public void update(ExchangeRate exchangeRate) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
             statement.setBigDecimal(1, exchangeRate.getRate());
@@ -150,8 +150,6 @@ public class ExchangeRateDao {
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
-
-        return Optional.of(exchangeRate);
     }
 
     private boolean isDuplicateExchangeRate(SQLException e) {

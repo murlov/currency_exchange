@@ -67,13 +67,26 @@ public class ExchangeRateService {
             throw new ValidationException("Rate must be bigger than zero");
         }
 
-        ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
+//        ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
 
-        ExchangeRate newExchangeRate = exchangeRateDao.update(exchangeRate)
+        CurrencyPair currencyPair = new CurrencyPair(
+                exchangeRateRequest.baseCurrencyCode(),
+                exchangeRateRequest.targetCurrencyCode()
+        );
+
+        ExchangeRate currentExchangeRate = exchangeRateDao.getByCodesPair(currencyPair)
                 .orElseThrow(() -> new NotFoundException("ExchangeRate not found: "
-                        + exchangeRate.getBase_currency().getCode()
-                        + " - "
-                        + exchangeRate.getTarget_currency().getCode()));
+                        + currencyPair.baseCurrencyCode() + " - " + currencyPair.targetCurrencyCode()));
+
+        ExchangeRate newExchangeRate = new ExchangeRate(
+                currentExchangeRate.getId(),
+                currentExchangeRate.getBase_currency(),
+                currentExchangeRate.getTarget_currency(),
+                exchangeRateRequest.rate()
+        );
+
+        exchangeRateDao.update(newExchangeRate);
+
         return ExchangeRateMapper.toDto(newExchangeRate);
     }
 
