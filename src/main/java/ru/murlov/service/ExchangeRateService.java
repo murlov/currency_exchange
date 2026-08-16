@@ -5,6 +5,7 @@ import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.dto.ExchangeRateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
+import ru.murlov.exception.UnexpectedRowsAffectedException;
 import ru.murlov.exception.ValidationException;
 import ru.murlov.mapper.ExchangeRateMapper;
 import ru.murlov.model.CurrencyPair;
@@ -16,6 +17,7 @@ import java.util.List;
 
 public class ExchangeRateService {
 
+    private static final int EXPECTED_UPDATED_ROWS = 1;
     private final ExchangeRateDao exchangeRateDao;
     private final CurrencyService currencyService;
 
@@ -85,7 +87,11 @@ public class ExchangeRateService {
                 exchangeRateRequest.rate()
         );
 
-        exchangeRateDao.update(newExchangeRate);
+        if (exchangeRateDao.update(newExchangeRate) != EXPECTED_UPDATED_ROWS) {
+            throw new UnexpectedRowsAffectedException(
+                    "ExchangeRate updating failed"
+            );
+        }
 
         return ExchangeRateMapper.toDto(newExchangeRate);
     }

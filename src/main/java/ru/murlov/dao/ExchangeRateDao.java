@@ -135,7 +135,7 @@ public class ExchangeRateDao {
         }
     }
 
-    public void update(ExchangeRate exchangeRate) {
+    public int update(ExchangeRate exchangeRate) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
             statement.setBigDecimal(1, exchangeRate.getRate());
@@ -143,7 +143,7 @@ public class ExchangeRateDao {
             statement.setLong(3, exchangeRate.getTarget_currency().getId());
 
             try {
-                statement.executeUpdate();
+                return statement.executeUpdate();
             } catch (SQLException e) {
                 throw new DatabaseException(e);
             }
