@@ -1,8 +1,8 @@
 package ru.murlov.util;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,11 +19,21 @@ public final class DatabaseInitializer {
         try (Connection connection = ConnectionManager.get();
              Statement statement = connection.createStatement()) {
 
-            String schemaPath = PropertiesUtil.get("schema.path");
-            String schema = Files.readString(Path.of(schemaPath));
+            InputStream schemaInputStream = DatabaseInitializer.class.
+                    getClassLoader().getResourceAsStream("db/schema.sql");
 
-            String seedPath = PropertiesUtil.get("seed.path");
-            String seed = Files.readString(Path.of(seedPath));
+            String schema = null;
+            if (schemaInputStream != null) {
+                schema = new String(schemaInputStream.readAllBytes(), StandardCharsets.UTF_8);
+            }
+
+            InputStream seedInputStream = DatabaseInitializer.class.
+                    getClassLoader().getResourceAsStream("db/seed.sql");
+
+            String seed = null;
+            if (seedInputStream != null) {
+                seed = new String(seedInputStream.readAllBytes(), StandardCharsets.UTF_8);
+            }
 
             String[] queries = (schema + seed).split(";");
             for (String query : queries) {
