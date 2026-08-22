@@ -60,6 +60,6 @@ public class ExchangeRatesServlet extends BaseServlet {
         ExchangeRateValidator.validate(exchangeRateRequest);
 
         ExchangeRateResponse exchangeRateResponse = exchangeRateService.save(exchangeRateRequest);
-        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse);
+        sendResponse(response, HttpServletResponse.SC_CREATED, exchangeRateResponse);
     }
 }
