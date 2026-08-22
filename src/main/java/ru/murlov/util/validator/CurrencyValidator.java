@@ -30,7 +30,7 @@ public final class CurrencyValidator {
     }
 
     private static void validateSign(String sign) {
-        if (sign.length() > 5) {
+        if (sign.length() > 3) {
             throw new ValidationException("Currency sign is too long");
         }
     }
