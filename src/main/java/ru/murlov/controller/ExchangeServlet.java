@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 public class ExchangeServlet extends BaseServlet {
 
     private ExchangeService exchangeService;
-    private static final int AMOUNT_DECIMAL_PRECISION = 6;
+    private static final int AMOUNT_DECIMAL_PRECISION = 2;
 
     @Override
     public void init() throws ServletException {

@@ -16,8 +16,8 @@ public class ExchangeService {
 
     private final ExchangeRateDao exchangeRateDao;
     private final CurrencyService currencyService;
-    private static final int RATE_DECIMAL_PRECISION = 2;
-    private static final int AMOUNT_DECIMAL_PRECISION = 6;
+    private static final int RATE_DECIMAL_PRECISION = 6;
+    private static final int AMOUNT_DECIMAL_PRECISION = 2;
 
     public ExchangeService(ExchangeRateDao exchangeRateDao, CurrencyService currencyService) {
         this.exchangeRateDao = exchangeRateDao;
