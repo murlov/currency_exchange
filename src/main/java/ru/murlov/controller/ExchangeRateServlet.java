@@ -24,7 +24,7 @@ public class ExchangeRateServlet extends BaseServlet {
     private static final int BASE_CODE_END_INDEX = 3;
     private static final int TARGET_CODE_START_INDEX = 3;
     private static final int TARGET_CODE_END_INDEX = 6;
-    private static final int RATE_NUMBER_OF_DECIMALS = 6;
+    private static final int RATE_DECIMAL_PRECISION = 6;
     private ExchangeRateService exchangeRateService;
 
     @Override
@@ -56,7 +56,7 @@ public class ExchangeRateServlet extends BaseServlet {
         BigDecimal rate = FormatUtil.getRequiredNormalizedBigDecimalParameter(
                 request,
                 "rate",
-                RATE_NUMBER_OF_DECIMALS
+                RATE_DECIMAL_PRECISION
         );
 
         ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(

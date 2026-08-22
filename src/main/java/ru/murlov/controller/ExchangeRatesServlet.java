@@ -16,7 +16,7 @@ import java.util.List;
 @WebServlet("/exchangeRates")
 public class ExchangeRatesServlet extends BaseServlet {
 
-    private static final int RATE_NUMBER_OF_DECIMALS = 6;
+    private static final int RATE_DECIMAL_PRECISION = 6;
     private ExchangeRateService exchangeRateService;
 
     @Override
@@ -49,7 +49,7 @@ public class ExchangeRatesServlet extends BaseServlet {
         BigDecimal rate = FormatUtil.getRequiredNormalizedBigDecimalParameter(
                 request,
                 "rate",
-                RATE_NUMBER_OF_DECIMALS);
+                RATE_DECIMAL_PRECISION);
 
         ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(
                 baseCurrencyCode,

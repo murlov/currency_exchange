@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 public class ExchangeServlet extends BaseServlet {
 
     private ExchangeService exchangeService;
-    private static final int AMOUNT_NUMBER_OF_DECIMALS = 6;
+    private static final int AMOUNT_DECIMAL_PRECISION = 6;
 
     @Override
     public void init() throws ServletException {
@@ -40,7 +40,7 @@ public class ExchangeServlet extends BaseServlet {
         BigDecimal amount = FormatUtil.getRequiredNormalizedBigDecimalParameter(
                 request,
                 "amount",
-                AMOUNT_NUMBER_OF_DECIMALS
+                AMOUNT_DECIMAL_PRECISION
         );
 
 
