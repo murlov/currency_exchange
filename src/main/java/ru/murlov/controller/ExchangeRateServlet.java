@@ -24,6 +24,7 @@ public class ExchangeRateServlet extends BaseServlet {
     private static final int BASE_CODE_END_INDEX = 3;
     private static final int TARGET_CODE_START_INDEX = 3;
     private static final int TARGET_CODE_END_INDEX = 6;
+    private static final int RATE_NUMBER_OF_DECIMALS = 6;
     private ExchangeRateService exchangeRateService;
 
     @Override
@@ -52,7 +53,11 @@ public class ExchangeRateServlet extends BaseServlet {
     @Override
     protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         CurrencyPair currencyPair = parseCurrencyPair(request);
-        BigDecimal rate = FormatUtil.getRequiredNormalizedBigDecimalParameter(request, "rate");
+        BigDecimal rate = FormatUtil.getRequiredNormalizedBigDecimalParameter(
+                request,
+                "rate",
+                RATE_NUMBER_OF_DECIMALS
+        );
 
         ExchangeRateRequest exchangeRateRequest = new ExchangeRateRequest(
                 currencyPair.baseCurrencyCode(),

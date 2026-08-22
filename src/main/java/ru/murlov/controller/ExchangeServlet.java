@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 public class ExchangeServlet extends BaseServlet {
 
     private ExchangeService exchangeService;
+    private static final int AMOUNT_NUMBER_OF_DECIMALS = 6;
 
     @Override
     public void init() throws ServletException {
@@ -36,7 +37,11 @@ public class ExchangeServlet extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String baseCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "from");
         String targetCurrencyCode = FormatUtil.getRequiredNormalizedStringParameter(request, "to");
-        BigDecimal amount = FormatUtil.getRequiredNormalizedBigDecimalParameter(request, "amount");
+        BigDecimal amount = FormatUtil.getRequiredNormalizedBigDecimalParameter(
+                request,
+                "amount",
+                AMOUNT_NUMBER_OF_DECIMALS
+        );
 
 
         ExchangeRequest exchangeRequest = new ExchangeRequest(

@@ -10,7 +10,6 @@ public final class FormatUtil {
 
     public static final int FIRST_LETTER_START = 0;
     public static final int FIRST_LETTER_END = 1;
-    public static final int NUMBER_OF_DECIMALS = 2;
 
     private FormatUtil() {}
 
@@ -23,7 +22,9 @@ public final class FormatUtil {
         return text.strip();
     }
 
-    public static BigDecimal getRequiredNormalizedBigDecimalParameter(HttpServletRequest request, String parameterName) {
+    public static BigDecimal getRequiredNormalizedBigDecimalParameter(HttpServletRequest request,
+                                                                      String parameterName,
+                                                                      int numberOfDecimals) {
         String text = request.getParameter(parameterName);
         if (text == null || text.isBlank()) {
             throw new ValidationException("Parameter '" + parameterName + "' is required");
@@ -34,7 +35,7 @@ public final class FormatUtil {
 
         BigDecimal result;
         try {
-            result = new BigDecimal(text.strip()).setScale(NUMBER_OF_DECIMALS, RoundingMode.HALF_UP);
+            result = new BigDecimal(text.strip()).setScale(numberOfDecimals, RoundingMode.HALF_UP);
         } catch (NumberFormatException e) {
             throw new ValidationException(capitalizedParameterName + " must be a decimal number.");
         }
