@@ -10,9 +10,13 @@ import ru.murlov.exception.*;
 
 import java.io.IOException;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @WebFilter("/*")
 public class ExceptionHandlingFilter extends HttpFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlingFilter.class);
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
@@ -27,6 +31,7 @@ public class ExceptionHandlingFilter extends HttpFilter {
         } catch (MethodNotAllowedException e) {
             sendError(response, HttpServletResponse.SC_METHOD_NOT_ALLOWED, e.getMessage());
         } catch (Exception e) {
+            logger.error("Unexpected error", e);
             sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unexpected error occurred");
         }
     }
