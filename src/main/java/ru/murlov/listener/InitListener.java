@@ -14,7 +14,6 @@ public class InitListener implements ServletContextListener {
         try {
             DatabaseInitializer.initialize();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Failed to initialize DB", e);
         }
     }
