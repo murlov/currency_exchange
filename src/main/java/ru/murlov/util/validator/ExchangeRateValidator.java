@@ -4,6 +4,9 @@ import ru.murlov.dto.ExchangeRateRequest;
 import ru.murlov.exception.ValidationException;
 
 public final class ExchangeRateValidator {
+
+    private ExchangeRateValidator() {}
+
     public static void validate(ExchangeRateRequest exchangeRateRequest) {
         validateBaseCurrencyCode(exchangeRateRequest.baseCurrencyCode());
         validateTargetCurrencyCode(exchangeRateRequest.targetCurrencyCode());
