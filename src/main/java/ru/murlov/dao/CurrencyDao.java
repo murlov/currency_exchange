@@ -3,8 +3,8 @@ package ru.murlov.dao;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
 import ru.murlov.exception.DatabaseException;
+import ru.murlov.exception.DuplicateException;
 import ru.murlov.model.Currency;
-import ru.murlov.exception.DuplicateCurrencyCodeException;
 import ru.murlov.util.ConnectionManager;
 
 import java.sql.Connection;
@@ -90,7 +90,7 @@ public class CurrencyDao {
                 statement.executeUpdate();
             } catch (SQLException e) {
                 if (isDuplicateCode(e)) {
-                    throw new DuplicateCurrencyCodeException(
+                    throw new DuplicateException(
                             "Currency with code '" + currency.getCode() + "' already exists"
                     );
                 }

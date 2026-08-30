@@ -44,7 +44,7 @@ public class ExceptionHandlingFilter extends HttpFilter {
             chain.doFilter(request, response);
         } catch (NotFoundException e) {
             sendError(response, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-        } catch (DuplicateCurrencyCodeException | DuplicateExchangeRateException e) {
+        } catch (DuplicateException e) {
             sendError(response, HttpServletResponse.SC_CONFLICT, e.getMessage());
         } catch (ValidationException e) {
             sendError(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

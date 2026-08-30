@@ -3,7 +3,7 @@ package ru.murlov.dao;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
 import ru.murlov.exception.DatabaseException;
-import ru.murlov.exception.DuplicateExchangeRateException;
+import ru.murlov.exception.DuplicateException;
 import ru.murlov.model.Currency;
 import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
@@ -108,7 +108,7 @@ public class ExchangeRateDao {
                 statement.executeUpdate();
             } catch (SQLException e) {
                 if (isDuplicateExchangeRate(e)) {
-                    throw new DuplicateExchangeRateException(
+                    throw new DuplicateException(
                             "Exchange rate with currency pair '" +
                                     exchangeRate.getBase_currency().getCode() +
                                     "' - '" +
