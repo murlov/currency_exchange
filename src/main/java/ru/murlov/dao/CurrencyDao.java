@@ -77,37 +77,33 @@ public class CurrencyDao {
         }
     }
 
-    public Optional<Currency> save(Currency currency) {
-        Currency savedCurrency = null;
-
+    public Currency save(Currency currency) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, currency.getCode());
             statement.setString(2, currency.getName());
             statement.setString(3, String.valueOf(currency.getSign()));
 
-            try {
-                statement.executeUpdate();
-            } catch (SQLException e) {
-                if (isDuplicateCode(e)) {
-                    throw new DuplicateException(
-                            "Currency with code '" + currency.getCode() + "' already exists"
-                    );
+            statement.executeUpdate();
+
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                if (!keys.next()) {
+                    throw new SQLException("Failed to retrieve generated currency ID");
                 }
-                throw new DatabaseException(e);
-            }
-            ResultSet keys = statement.getGeneratedKeys();
-            if (keys.next()) {
-                savedCurrency = new Currency(
+                return new Currency(
                         keys.getLong(1),
                         currency.getCode(),
                         currency.getName(),
                         currency.getSign()
                 );
             }
-
-            return Optional.ofNullable(savedCurrency);
         } catch (SQLException e) {
+            if (isDuplicateCode(e)) {
+                throw new DuplicateException(
+                        "Currency with code '" + currency.getCode() + "' already exists"
+                );
+            }
+
             throw new DatabaseException(e);
         }
     }

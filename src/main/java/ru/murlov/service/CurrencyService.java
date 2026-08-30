@@ -38,10 +38,7 @@ public class CurrencyService {
     public CurrencyResponse save(CurrencyCreateRequest currencyCreateRequest) {
         Currency currency = CurrencyMapper.toModel(currencyCreateRequest);
 
-        Currency newCurrency = currencyDao.save(currency)
-                .orElseThrow(() -> new NotFoundException(
-                        "Failed to save currency"
-                ));
+        Currency newCurrency = currencyDao.save(currency);
         return CurrencyMapper.toDto(newCurrency);
     }
 }
