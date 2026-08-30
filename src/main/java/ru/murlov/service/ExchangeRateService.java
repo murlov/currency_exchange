@@ -1,18 +1,15 @@
 package ru.murlov.service;
 
 import ru.murlov.dao.ExchangeRateDao;
-import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.dto.ExchangeRateRequest;
-import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.exception.UnexpectedRowsAffectedException;
 import ru.murlov.exception.ValidationException;
-import ru.murlov.mapper.ExchangeRateMapper;
+import ru.murlov.model.Currency;
 import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExchangeRateService {
@@ -26,42 +23,28 @@ public class ExchangeRateService {
         this.currencyService = currencyService;
     }
 
-    public List<ExchangeRateResponse> getAll() {
-        List<ExchangeRate> exchangeRates;
-        List<ExchangeRateResponse> exchangeRateResponses = new ArrayList<>();
-
-        exchangeRates = exchangeRateDao.getAll();
-
-        for (ExchangeRate exchangeRate : exchangeRates) {
-            exchangeRateResponses.add(
-                    ExchangeRateMapper.toDto(exchangeRate)
-            );
-        }
-
-        return exchangeRateResponses;
+    public List<ExchangeRate> getAll() {
+        return exchangeRateDao.getAll();
     }
 
-    public ExchangeRateResponse getByCodesPair(CurrencyPair currencyPair) {
-        ExchangeRate exchangeRate = exchangeRateDao.getByCodesPair(currencyPair)
+    public ExchangeRate getByCodesPair(CurrencyPair currencyPair) {
+        return exchangeRateDao.getByCodesPair(currencyPair)
                 .orElseThrow(() -> new NotFoundException("ExchangeRate not found: "
                 + currencyPair.baseCurrencyCode() + " - " + currencyPair.targetCurrencyCode()));
-
-        return ExchangeRateMapper.toDto(exchangeRate);
     }
 
 
-    public ExchangeRateResponse save(ExchangeRateRequest exchangeRateRequest) {
+    public ExchangeRate save(ExchangeRateRequest exchangeRateRequest) {
         if (!isRateValid(exchangeRateRequest.rate())) {
             throw new ValidationException("Rate must be bigger than zero");
         }
 
         ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
 
-        ExchangeRate newExchangeRate = exchangeRateDao.save(exchangeRate);
-        return ExchangeRateMapper.toDto(newExchangeRate);
+        return exchangeRateDao.save(exchangeRate);
     }
 
-    public ExchangeRateResponse update(ExchangeRateRequest exchangeRateRequest) {
+    public ExchangeRate update(ExchangeRateRequest exchangeRateRequest) {
         if (!isRateValid(exchangeRateRequest.rate())) {
             throw new ValidationException("Rate must be bigger than zero");
         }
@@ -88,7 +71,7 @@ public class ExchangeRateService {
             );
         }
 
-        return ExchangeRateMapper.toDto(newExchangeRate);
+        return newExchangeRate;
     }
 
     private boolean isRateValid(BigDecimal rate) {
@@ -98,13 +81,15 @@ public class ExchangeRateService {
 
     private ExchangeRate createExchangeRate(ExchangeRateRequest exchangeRateRequest) {
 
-        CurrencyResponse baseCurrencyResponse = currencyService.
+        Currency baseCurrency = currencyService.
                 getByCode(exchangeRateRequest.baseCurrencyCode());
-        CurrencyResponse targetCurrencyResponse = currencyService
+        Currency targetCurrency = currencyService
                 .getByCode(exchangeRateRequest.targetCurrencyCode());
 
-        return ExchangeRateMapper.toModel(baseCurrencyResponse,
-                targetCurrencyResponse,
-                exchangeRateRequest.rate());
+        return new ExchangeRate(
+                baseCurrency,
+                targetCurrency,
+                exchangeRateRequest.rate()
+        );
     }
 }

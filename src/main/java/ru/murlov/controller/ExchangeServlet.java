@@ -4,7 +4,8 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.murlov.dto.ExchangeRequest;
-import ru.murlov.dto.ExchangeResponse;
+import ru.murlov.mapper.ExchangeMapper;
+import ru.murlov.model.Exchange;
 import ru.murlov.service.ExchangeService;
 import ru.murlov.util.validator.ExchangeValidator;
 import ru.murlov.util.FormatUtil;
@@ -51,7 +52,7 @@ public class ExchangeServlet extends BaseServlet {
 
         ExchangeValidator.validate(exchangeRequest);
 
-        ExchangeResponse exchangeResponse = exchangeService.exchange(exchangeRequest);
-        sendResponse(response, HttpServletResponse.SC_OK, exchangeResponse);
+        Exchange exchange = exchangeService.exchange(exchangeRequest);
+        sendResponse(response, HttpServletResponse.SC_OK, ExchangeMapper.toDto(exchange));
     }
 }

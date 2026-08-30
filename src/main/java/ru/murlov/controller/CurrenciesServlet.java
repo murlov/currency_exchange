@@ -5,6 +5,8 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.murlov.dto.CurrencyCreateRequest;
 import ru.murlov.dto.CurrencyResponse;
+import ru.murlov.mapper.CurrencyMapper;
+import ru.murlov.model.Currency;
 import ru.murlov.service.CurrencyService;
 import ru.murlov.util.validator.CurrencyValidator;
 import ru.murlov.util.FormatUtil;
@@ -35,8 +37,10 @@ public class CurrenciesServlet extends BaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<CurrencyResponse> currencyResponses = new ArrayList<>(currencyService.getAll());
-
+        List<CurrencyResponse> currencyResponses = new ArrayList<>();
+        for (Currency currency : currencyService.getAll()) {
+            currencyResponses.add(CurrencyMapper.toDto(currency));
+        }
         sendResponse(response, HttpServletResponse.SC_OK, currencyResponses);
     }
 
@@ -54,9 +58,8 @@ public class CurrenciesServlet extends BaseServlet {
 
         CurrencyValidator.validate(currencyCreateRequest);
 
-        CurrencyResponse currencyResponse;
-        currencyResponse = currencyService.save(currencyCreateRequest);
+        Currency currency = currencyService.save(currencyCreateRequest);
 
-        sendResponse(response, HttpServletResponse.SC_CREATED, currencyResponse);
+        sendResponse(response, HttpServletResponse.SC_CREATED, CurrencyMapper.toDto(currency));
     }
 }

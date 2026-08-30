@@ -5,12 +5,15 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.murlov.dto.ExchangeRateRequest;
 import ru.murlov.dto.ExchangeRateResponse;
+import ru.murlov.mapper.ExchangeRateMapper;
+import ru.murlov.model.ExchangeRate;
 import ru.murlov.service.ExchangeRateService;
 import ru.murlov.util.validator.ExchangeRateValidator;
 import ru.murlov.util.FormatUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/exchangeRates")
@@ -35,8 +38,13 @@ public class ExchangeRatesServlet extends BaseServlet {
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<ExchangeRateResponse> exchangeRateResponses = exchangeRateService.getAll();
+        List<ExchangeRateResponse> exchangeRateResponses = new ArrayList<>();
 
+        for (ExchangeRate exchangeRate : exchangeRateService.getAll()) {
+            exchangeRateResponses.add(
+                    ExchangeRateMapper.toDto(exchangeRate)
+            );
+        }
         sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponses);
     }
 
@@ -59,7 +67,7 @@ public class ExchangeRatesServlet extends BaseServlet {
 
         ExchangeRateValidator.validate(exchangeRateRequest);
 
-        ExchangeRateResponse exchangeRateResponse = exchangeRateService.save(exchangeRateRequest);
-        sendResponse(response, HttpServletResponse.SC_CREATED, exchangeRateResponse);
+        ExchangeRate exchangeRate = exchangeRateService.save(exchangeRateRequest);
+        sendResponse(response, HttpServletResponse.SC_CREATED, ExchangeRateMapper.toDto(exchangeRate));
     }
 }

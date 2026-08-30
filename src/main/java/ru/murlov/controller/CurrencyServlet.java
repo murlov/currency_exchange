@@ -3,8 +3,9 @@ package ru.murlov.controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.exception.ValidationException;
+import ru.murlov.mapper.CurrencyMapper;
+import ru.murlov.model.Currency;
 import ru.murlov.service.CurrencyService;
 import ru.murlov.exception.NotFoundException;
 
@@ -46,7 +47,7 @@ public class CurrencyServlet extends BaseServlet {
         }
 
         String code = parts[CODE_PART_INDEX];
-        CurrencyResponse currencyResponse = currencyService.getByCode(code);
-        sendResponse(response, HttpServletResponse.SC_OK, currencyResponse);
+        Currency currency = currencyService.getByCode(code);
+        sendResponse(response, HttpServletResponse.SC_OK, CurrencyMapper.toDto(currency));
     }
 }

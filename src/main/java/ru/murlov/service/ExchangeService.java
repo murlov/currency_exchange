@@ -2,10 +2,10 @@ package ru.murlov.service;
 
 import ru.murlov.dao.ExchangeRateDao;
 import ru.murlov.dto.ExchangeRequest;
-import ru.murlov.dto.ExchangeResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.exception.ValidationException;
 import ru.murlov.model.CurrencyPair;
+import ru.murlov.model.Exchange;
 import ru.murlov.model.ExchangeRate;
 
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ public class ExchangeService {
         this.currencyService = currencyService;
     }
 
-    public ExchangeResponse exchange(ExchangeRequest exchangeRequest) {
+    public Exchange exchange(ExchangeRequest exchangeRequest) {
         BigDecimal convertedAmount;
 
         if (!amountIsValid(exchangeRequest.amount())) {
@@ -35,7 +35,7 @@ public class ExchangeService {
 
         convertedAmount = exchangeRequest.amount().multiply(rate);
 
-        return new ExchangeResponse(
+        return new Exchange(
                 currencyService.getByCode(exchangeRequest.baseCurrencyCode()),
                 currencyService.getByCode(exchangeRequest.targetCurrencyCode()),
                 rate,

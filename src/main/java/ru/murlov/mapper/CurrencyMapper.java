@@ -6,22 +6,13 @@ import ru.murlov.model.Currency;
 
 public final class CurrencyMapper {
 
-    private CurrencyMapper () {}
+    private CurrencyMapper() {}
 
     public static Currency toModel(CurrencyCreateRequest currencyCreateRequest) {
         return new Currency(
                 currencyCreateRequest.code(),
                 currencyCreateRequest.name(),
                 currencyCreateRequest.sign()
-        );
-    }
-
-    public static Currency toModel(CurrencyResponse currencyResponse) {
-        return new Currency(
-                currencyResponse.id(),
-                currencyResponse.code(),
-                currencyResponse.name(),
-                currencyResponse.sign()
         );
     }
 

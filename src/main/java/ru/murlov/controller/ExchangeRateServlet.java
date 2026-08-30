@@ -4,10 +4,11 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import ru.murlov.dto.ExchangeRateRequest;
-import ru.murlov.dto.ExchangeRateResponse;
 import ru.murlov.exception.NotFoundException;
 import ru.murlov.exception.ValidationException;
+import ru.murlov.mapper.ExchangeRateMapper;
 import ru.murlov.model.CurrencyPair;
+import ru.murlov.model.ExchangeRate;
 import ru.murlov.service.ExchangeRateService;
 import ru.murlov.util.FormatUtil;
 
@@ -46,8 +47,8 @@ public class ExchangeRateServlet extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         CurrencyPair currencyPair = parseCurrencyPair(request);
 
-        ExchangeRateResponse exchangeRateResponse = exchangeRateService.getByCodesPair(currencyPair);
-        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse);
+        ExchangeRate exchangeRate = exchangeRateService.getByCodesPair(currencyPair);
+        sendResponse(response, HttpServletResponse.SC_OK, ExchangeRateMapper.toDto(exchangeRate));
     }
 
     @Override
@@ -65,8 +66,8 @@ public class ExchangeRateServlet extends BaseServlet {
                 rate
         );
 
-        ExchangeRateResponse exchangeRateResponse = exchangeRateService.update(exchangeRateRequest);
-        sendResponse(response, HttpServletResponse.SC_OK, exchangeRateResponse);
+        ExchangeRate exchangeRate = exchangeRateService.update(exchangeRateRequest);
+        sendResponse(response, HttpServletResponse.SC_OK, ExchangeRateMapper.toDto(exchangeRate));
     }
 
     private CurrencyPair parseCurrencyPair(HttpServletRequest request) {
