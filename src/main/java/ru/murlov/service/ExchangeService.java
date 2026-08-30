@@ -15,13 +15,11 @@ import java.util.Optional;
 public class ExchangeService {
 
     private final ExchangeRateDao exchangeRateDao;
-    private final CurrencyService currencyService;
     private static final int RATE_DECIMAL_PRECISION = 6;
     private static final int AMOUNT_DECIMAL_PRECISION = 2;
 
-    public ExchangeService(ExchangeRateDao exchangeRateDao, CurrencyService currencyService) {
+    public ExchangeService(ExchangeRateDao exchangeRateDao) {
         this.exchangeRateDao = exchangeRateDao;
-        this.currencyService = currencyService;
     }
 
     public Exchange exchange(ExchangeRequest exchangeRequest) {
@@ -31,20 +29,20 @@ public class ExchangeService {
             throw new ValidationException("Amount must be not less than zero");
         }
 
-        BigDecimal rate = getRate(exchangeRequest);
+        ExchangeRate exchangeRate = getExchangeRate(exchangeRequest);
 
-        convertedAmount = exchangeRequest.amount().multiply(rate);
+        convertedAmount = exchangeRequest.amount().multiply(exchangeRate.getRate());
 
         return new Exchange(
-                currencyService.getByCode(exchangeRequest.baseCurrencyCode()),
-                currencyService.getByCode(exchangeRequest.targetCurrencyCode()),
-                rate,
+                exchangeRate.getBaseCurrency(),
+                exchangeRate.getTargetCurrency(),
+                exchangeRate.getRate(),
                 exchangeRequest.amount(),
                 convertedAmount.setScale(AMOUNT_DECIMAL_PRECISION, RoundingMode.HALF_UP)
         );
     }
 
-    private BigDecimal getRate(ExchangeRequest exchangeRequest) {
+    private ExchangeRate getExchangeRate(ExchangeRequest exchangeRequest) {
         return getDirect(exchangeRequest)
                 .or(() -> getReverse(exchangeRequest))
                 .or(() -> getCross(exchangeRequest))
@@ -53,18 +51,17 @@ public class ExchangeService {
                 ));
     }
 
-    private Optional<BigDecimal> getDirect(ExchangeRequest exchangeRequest) {
-        Optional<ExchangeRate> baseCurrencyToTargetCurrency = exchangeRateDao.getByCodesPair(
+    private Optional<ExchangeRate> getDirect(ExchangeRequest exchangeRequest) {
+
+        return exchangeRateDao.getByCodesPair(
                 new CurrencyPair(
                         exchangeRequest.baseCurrencyCode(),
                         exchangeRequest.targetCurrencyCode()
                 )
         );
-
-        return baseCurrencyToTargetCurrency.map(ExchangeRate::getRate);
     }
 
-    private Optional<BigDecimal> getReverse(ExchangeRequest exchangeRequest) {
+    private Optional<ExchangeRate> getReverse(ExchangeRequest exchangeRequest) {
         Optional<ExchangeRate> targetCurrencyToBaseCurrency = exchangeRateDao.getByCodesPair(
                 new CurrencyPair(
                         exchangeRequest.targetCurrencyCode(),
@@ -72,16 +69,19 @@ public class ExchangeService {
                 )
         );
 
-        return targetCurrencyToBaseCurrency.map(
-                exchangeRate -> new BigDecimal("1").divide(
+
+        return targetCurrencyToBaseCurrency.map(exchangeRate -> new ExchangeRate(
+                exchangeRate.getBaseCurrency(),
+                exchangeRate.getTargetCurrency(),
+                new BigDecimal("1").divide(
                         exchangeRate.getRate(),
                         RATE_DECIMAL_PRECISION,
                         RoundingMode.HALF_UP
                 )
-        );
+        ));
     }
 
-    private Optional<BigDecimal> getCross(ExchangeRequest exchangeRequest) {
+    private Optional<ExchangeRate> getCross(ExchangeRequest exchangeRequest) {
         Optional<ExchangeRate> USDToBaseCurrency = exchangeRateDao.getByCodesPair(
                 new CurrencyPair(
                         "USD",
@@ -99,13 +99,15 @@ public class ExchangeService {
         if (USDToBaseCurrency.isPresent() && USDToTargetCurrency.isPresent()) {
             BigDecimal USDToTargetCurrencyRate = USDToTargetCurrency.get().getRate();
             BigDecimal USDToBaseCurrencyRate = USDToBaseCurrency.get().getRate();
-            return Optional.of(
+            return Optional.of(new ExchangeRate(
+                    USDToBaseCurrency.get().getBaseCurrency(),
+                    USDToTargetCurrency.get().getTargetCurrency(),
                     USDToTargetCurrencyRate.divide(
                             USDToBaseCurrencyRate,
                             RATE_DECIMAL_PRECISION,
                             RoundingMode.HALF_UP
                     )
-            );
+            ));
         } else {
             return Optional.empty();
         }
