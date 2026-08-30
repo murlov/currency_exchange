@@ -4,7 +4,9 @@ import ru.murlov.dto.CurrencyCreateRequest;
 import ru.murlov.dto.CurrencyResponse;
 import ru.murlov.model.Currency;
 
-public class CurrencyMapper {
+public final class CurrencyMapper {
+
+    private CurrencyMapper () {}
 
     public static Currency toModel(CurrencyCreateRequest currencyCreateRequest) {
         return new Currency(

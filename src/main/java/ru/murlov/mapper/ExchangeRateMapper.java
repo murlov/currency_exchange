@@ -6,7 +6,9 @@ import ru.murlov.model.ExchangeRate;
 
 import java.math.BigDecimal;
 
-public class ExchangeRateMapper {
+public final class ExchangeRateMapper {
+
+    private ExchangeRateMapper () {}
 
     public static ExchangeRateResponse toDto(ExchangeRate exchangeRate) {
         return new ExchangeRateResponse(
