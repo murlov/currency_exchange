@@ -10,6 +10,7 @@ public final class ExchangeValidator {
     public static void validate(ExchangeRequest exchangeRequest) {
         validateBaseCurrencyCode(exchangeRequest.baseCurrencyCode());
         validateTargetCurrencyCode(exchangeRequest.targetCurrencyCode());
+        validateCodesPair(exchangeRequest);
     }
 
     private static void validateBaseCurrencyCode(String baseCurrencyCode) {
@@ -25,6 +26,12 @@ public final class ExchangeValidator {
 
         if (!targetCurrencyCode.matches("[A-Z]{3}")) {
             throw new ValidationException("Target currency code must contain exactly 3 uppercase letters");
+        }
+    }
+
+    private static void validateCodesPair(ExchangeRequest exchangeRequest) {
+        if (exchangeRequest.baseCurrencyCode().equals(exchangeRequest.targetCurrencyCode())) {
+            throw new ValidationException("Currency codes must be different");
         }
     }
 
