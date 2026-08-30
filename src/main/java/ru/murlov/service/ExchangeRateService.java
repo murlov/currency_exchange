@@ -69,8 +69,6 @@ public class ExchangeRateService {
             throw new ValidationException("Rate must be bigger than zero");
         }
 
-//        ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
-
         CurrencyPair currencyPair = new CurrencyPair(
                 exchangeRateRequest.baseCurrencyCode(),
                 exchangeRateRequest.targetCurrencyCode()
