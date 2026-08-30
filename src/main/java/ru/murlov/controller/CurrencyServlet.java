@@ -8,6 +8,7 @@ import ru.murlov.mapper.CurrencyMapper;
 import ru.murlov.model.Currency;
 import ru.murlov.service.CurrencyService;
 import ru.murlov.exception.NotFoundException;
+import ru.murlov.util.validator.CurrencyValidator;
 
 import java.io.IOException;
 
@@ -47,6 +48,8 @@ public class CurrencyServlet extends BaseServlet {
         }
 
         String code = parts[CODE_PART_INDEX];
+        CurrencyValidator.validate(code);
+
         Currency currency = currencyService.getByCode(code);
         sendResponse(response, HttpServletResponse.SC_OK, CurrencyMapper.toDto(currency));
     }

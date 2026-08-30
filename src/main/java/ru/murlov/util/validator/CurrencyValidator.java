@@ -13,6 +13,10 @@ public final class CurrencyValidator {
         validateSign(currencyCreateRequest.sign());
     }
 
+    public static void validate(String code) {
+        validateCode(code);
+    }
+
     private static void validateName(String name) {
         requireNotBlank(name, "Currency name is required");
 
