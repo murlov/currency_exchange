@@ -35,7 +35,7 @@ public final class FormatUtil {
 
         BigDecimal result;
         try {
-            result = new BigDecimal(text.strip()).setScale(numberOfDecimals, RoundingMode.HALF_UP);
+            result = new BigDecimal(text.strip()).setScale(numberOfDecimals, RoundingMode.DOWN);
         } catch (NumberFormatException e) {
             throw new ValidationException(capitalizedParameterName + " must be a decimal number.");
         }
