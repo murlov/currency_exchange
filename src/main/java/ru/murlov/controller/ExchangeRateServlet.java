@@ -48,6 +48,8 @@ public class ExchangeRateServlet extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         CurrencyPair currencyPair = parseCurrencyPair(request);
 
+        ExchangeRateValidator.validate(currencyPair);
+
         ExchangeRate exchangeRate = exchangeRateService.getByCodesPair(currencyPair);
         sendResponse(response, HttpServletResponse.SC_OK, ExchangeRateMapper.toDto(exchangeRate));
     }
