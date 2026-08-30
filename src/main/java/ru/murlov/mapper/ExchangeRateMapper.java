@@ -11,8 +11,8 @@ public class ExchangeRateMapper {
     public static ExchangeRateResponse toDto(ExchangeRate exchangeRate) {
         return new ExchangeRateResponse(
                 exchangeRate.getId(),
-                CurrencyMapper.toDto(exchangeRate.getBase_currency()),
-                CurrencyMapper.toDto(exchangeRate.getTarget_currency()),
+                CurrencyMapper.toDto(exchangeRate.getBaseCurrency()),
+                CurrencyMapper.toDto(exchangeRate.getTargetCurrency()),
                 exchangeRate.getRate()
         );
     }

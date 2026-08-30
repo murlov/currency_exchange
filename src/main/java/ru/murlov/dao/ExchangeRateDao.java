@@ -100,8 +100,8 @@ public class ExchangeRateDao {
 
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
-            statement.setLong(1, exchangeRate.getBase_currency().getId());
-            statement.setLong(2, exchangeRate.getTarget_currency().getId());
+            statement.setLong(1, exchangeRate.getBaseCurrency().getId());
+            statement.setLong(2, exchangeRate.getTargetCurrency().getId());
             statement.setBigDecimal(3, exchangeRate.getRate());
 
             try {
@@ -110,9 +110,9 @@ public class ExchangeRateDao {
                 if (isDuplicateExchangeRate(e)) {
                     throw new DuplicateException(
                             "Exchange rate with currency pair '" +
-                                    exchangeRate.getBase_currency().getCode() +
+                                    exchangeRate.getBaseCurrency().getCode() +
                                     "' - '" +
-                                    exchangeRate.getTarget_currency().getCode() +
+                                    exchangeRate.getTargetCurrency().getCode() +
                                     "' already exists"
                     );
                 }
@@ -123,8 +123,8 @@ public class ExchangeRateDao {
             if (keys.next()) {
                 savedExchangeRate = new ExchangeRate(
                         keys.getLong(1),
-                        exchangeRate.getBase_currency(),
-                        exchangeRate.getTarget_currency(),
+                        exchangeRate.getBaseCurrency(),
+                        exchangeRate.getTargetCurrency(),
                         exchangeRate.getRate()
                 );
             }
@@ -139,8 +139,8 @@ public class ExchangeRateDao {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
             statement.setBigDecimal(1, exchangeRate.getRate());
-            statement.setLong(2, exchangeRate.getBase_currency().getId());
-            statement.setLong(3, exchangeRate.getTarget_currency().getId());
+            statement.setLong(2, exchangeRate.getBaseCurrency().getId());
+            statement.setLong(3, exchangeRate.getTargetCurrency().getId());
 
             try {
                 return statement.executeUpdate();

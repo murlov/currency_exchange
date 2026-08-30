@@ -82,8 +82,8 @@ public class ExchangeRateService {
 
         ExchangeRate newExchangeRate = new ExchangeRate(
                 currentExchangeRate.getId(),
-                currentExchangeRate.getBase_currency(),
-                currentExchangeRate.getTarget_currency(),
+                currentExchangeRate.getBaseCurrency(),
+                currentExchangeRate.getTargetCurrency(),
                 exchangeRateRequest.rate()
         );
 
