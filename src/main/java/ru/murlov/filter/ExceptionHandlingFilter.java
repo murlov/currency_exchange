@@ -8,10 +8,10 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.murlov.dto.ErrorResponse;
 import ru.murlov.exception.*;
 
 import java.io.IOException;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,9 +57,7 @@ public class ExceptionHandlingFilter extends HttpFilter {
     }
 
     private void sendError(HttpServletResponse response, int status, String message) throws IOException {
-        Map<String, String> error = Map.of(
-                "message", message
-        );
+        ErrorResponse error = new ErrorResponse(message);
         response.setStatus(status);
         objectMapper.writeValue(response.getWriter(), error);
     }
