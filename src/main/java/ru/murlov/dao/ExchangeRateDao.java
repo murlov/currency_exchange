@@ -104,20 +104,7 @@ public class ExchangeRateDao {
             statement.setLong(2, exchangeRate.getTargetCurrency().getId());
             statement.setBigDecimal(3, exchangeRate.getRate());
 
-            try {
-                statement.executeUpdate();
-            } catch (SQLException e) {
-                if (isDuplicateExchangeRate(e)) {
-                    throw new DuplicateException(
-                            "Exchange rate with currency pair '" +
-                                    exchangeRate.getBaseCurrency().getCode() +
-                                    "' - '" +
-                                    exchangeRate.getTargetCurrency().getCode() +
-                                    "' already exists"
-                    );
-                }
-                throw new DatabaseException(e);
-            }
+            statement.executeUpdate();
 
             ResultSet keys = statement.getGeneratedKeys();
             if (keys.next()) {
@@ -131,6 +118,16 @@ public class ExchangeRateDao {
 
             return Optional.ofNullable(savedExchangeRate);
         } catch (SQLException e) {
+            if (isDuplicateExchangeRate(e)) {
+                throw new DuplicateException(
+                        "Exchange rate with currency pair '" +
+                                exchangeRate.getBaseCurrency().getCode() +
+                                "' - '" +
+                                exchangeRate.getTargetCurrency().getCode() +
+                                "' already exists"
+                );
+            }
+
             throw new DatabaseException(e);
         }
     }
