@@ -11,6 +11,7 @@ import ru.murlov.model.CurrencyPair;
 import ru.murlov.model.ExchangeRate;
 import ru.murlov.service.ExchangeRateService;
 import ru.murlov.util.FormatUtil;
+import ru.murlov.util.validator.ExchangeRateValidator;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -65,6 +66,8 @@ public class ExchangeRateServlet extends BaseServlet {
                 currencyPair.targetCurrencyCode(),
                 rate
         );
+
+        ExchangeRateValidator.validate(exchangeRateRequest);
 
         ExchangeRate exchangeRate = exchangeRateService.update(exchangeRateRequest);
         sendResponse(response, HttpServletResponse.SC_OK, ExchangeRateMapper.toDto(exchangeRate));
