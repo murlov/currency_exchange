@@ -1,7 +1,9 @@
 package ru.murlov.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +19,24 @@ import org.slf4j.LoggerFactory;
 public class ExceptionHandlingFilter extends HttpFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlingFilter.class);
+    private ObjectMapper objectMapper;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        this.objectMapper =
+                (ObjectMapper) getServletContext()
+                        .getAttribute("objectMapper");
+
+        if (objectMapper == null) {
+            throw new IllegalStateException(
+                    "ObjectMapper is not initialized"
+            );
+        }
+
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    }
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
@@ -37,11 +57,10 @@ public class ExceptionHandlingFilter extends HttpFilter {
     }
 
     private void sendError(HttpServletResponse response, int status, String message) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
         Map<String, String> error = Map.of(
                 "message", message
         );
         response.setStatus(status);
-        mapper.writeValue(response.getWriter(), error);
+        objectMapper.writeValue(response.getWriter(), error);
     }
 }
