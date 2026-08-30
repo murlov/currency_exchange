@@ -30,6 +30,8 @@ public final class CurrencyValidator {
     }
 
     private static void validateSign(String sign) {
+        requireNotBlank(sign, "Currency sign is required");
+
         if (sign.length() > 3) {
             throw new ValidationException("Currency sign is too long");
         }
