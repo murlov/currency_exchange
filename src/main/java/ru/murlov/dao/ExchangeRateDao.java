@@ -95,9 +95,7 @@ public class ExchangeRateDao {
         }
     }
 
-    public Optional<ExchangeRate> save(ExchangeRate exchangeRate) {
-        ExchangeRate savedExchangeRate = null;
-
+    public ExchangeRate save(ExchangeRate exchangeRate) {
         try (Connection connection = ConnectionManager.get();
              PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
             statement.setLong(1, exchangeRate.getBaseCurrency().getId());
@@ -106,17 +104,17 @@ public class ExchangeRateDao {
 
             statement.executeUpdate();
 
-            ResultSet keys = statement.getGeneratedKeys();
-            if (keys.next()) {
-                savedExchangeRate = new ExchangeRate(
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                if (!keys.next()) {
+                    throw new SQLException("Failed to retrieve generated exchange rate ID");
+                }
+                return new ExchangeRate(
                         keys.getLong(1),
                         exchangeRate.getBaseCurrency(),
                         exchangeRate.getTargetCurrency(),
                         exchangeRate.getRate()
                 );
             }
-
-            return Optional.ofNullable(savedExchangeRate);
         } catch (SQLException e) {
             if (isDuplicateExchangeRate(e)) {
                 throw new DuplicateException(

@@ -57,10 +57,7 @@ public class ExchangeRateService {
 
         ExchangeRate exchangeRate = createExchangeRate(exchangeRateRequest);
 
-        ExchangeRate newExchangeRate = exchangeRateDao.save(exchangeRate)
-                .orElseThrow(() -> new NotFoundException(
-                        "Failed to save exchange rate"
-                ));
+        ExchangeRate newExchangeRate = exchangeRateDao.save(exchangeRate);
         return ExchangeRateMapper.toDto(newExchangeRate);
     }
 
