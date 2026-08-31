@@ -10,13 +10,12 @@ import java.util.concurrent.BlockingQueue;
 public final class ConnectionManager {
 
     private static final int DEFAULT_POOL_SIZE = 10;
-    private static final String POOL_SIZE_KEY = "db.pool.size";
     private static final BlockingQueue<Connection> pool;
     private static final BlockingQueue<Connection> sourceConnections;
     private static final int poolSize;
 
     static {
-        String poolSizeValue = PropertiesUtil.get(POOL_SIZE_KEY);
+        String poolSizeValue = System.getenv("DB_POOL_SIZE");
         poolSize = poolSizeValue == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSizeValue);
         pool = new ArrayBlockingQueue<>(poolSize);
         sourceConnections = new ArrayBlockingQueue<>(poolSize);
@@ -60,7 +59,7 @@ public final class ConnectionManager {
     }
 
     private static Connection open() {
-        String path = PropertiesUtil.get("db.path");
+        String path = System.getenv("DB_PATH");
         try {
             return DriverManager
                     .getConnection("jdbc:sqlite:" + path);
