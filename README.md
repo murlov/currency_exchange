@@ -23,21 +23,18 @@
 ## Локальный запуск
 
 1. Клонировать репозиторий
-2. Создать `application-local.properties` на основе `application.properties` и прописать необходимые значения (каталог для файла БД должен уже существовать)
+2. Задать переменные окружения на основе .env.example (каталог для файла БД должен уже существовать)
 3. Отредактировать `...\tomcat\conf\server.xml` для обработки тела PATCH:
-```
-...
+   ```
+   ...
    <Connector port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
                redirectPort="8443" 
                parseBodyMethods="POST,PUT,PATCH"/>
-...
-```
-4. Собрать war-файл:
-```
-mvnw.cmd clean package
-```
-5. Запустить Tomcat внутри Intellij IDEA или переместить war-файл в каталог `...\tomcat\webapps\` и выполнить команду `\tomcat\bin\startup.bat`
+   ...
+   ```
+4. Собрать war-файл
+5. Запустить Tomcat
 6. Перейти по адресу `http://localhost:8080/`
 7. Для тестирования с использованием фронтенда запустить index.html
 
@@ -46,20 +43,27 @@ mvnw.cmd clean package
 ## Деплой (на примере Ubuntu)
 
 1. Клонируем репозиторий `git clone https://github.com/murlov/currency_exchange.git`
-2. Создаем локальный файл properties `cp src/main/resources/application.properties src/main/resources/application-local.properties` (прописать свои значения, каталог для файла БД должен уже существовать)
-3. Выполнить сборку war-файла `./mvnw clean package`
-4. Переместить его в каталог Tomcat'a `cp target/currency_exchange-1.0-SNAPSHOT.war /opt/tomcat/apache-tomcat-<version>/webapps/ROOT.war`
-5. Отредактировать `/opt/tomcat/apache-tomcat-<version>/conf/server.xml` для обработки тела PATCH:
-```
+2. Создаем файл .env `cp .env.example /opt/currency_exchange/.env` (прописать свои значения, каталог для файла БД должен уже существовать)
+3. Отредактировать `/etc/systemd/system/tomcat.service`:
+   ```
+   ...
+   [Service]
+   EnvironmentFile=/opt/currency_exchange/.env
+   ...
+   ```
+4. Выполнить сборку war-файла `./mvnw clean package`
+5. Переместить его в каталог Tomcat'a `cp target/currency_exchange-1.0-SNAPSHOT.war /opt/tomcat/apache-tomcat-<version>/webapps/ROOT.war`
+6. Отредактировать `/opt/tomcat/apache-tomcat-<version>/conf/server.xml` для обработки тела PATCH:
+   ```
    ...
    <Connector port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
                redirectPort="8443" 
                parseBodyMethods="POST,PUT,PATCH"/>
    ...
-```
-6. Скопировать фронтенд `cp -r frontend/. /opt/currency_exchange/frontend/`
-7. Отредактировать `/etc/nginx/sites-available/default`:
+   ```
+7. Скопировать фронтенд `cp -r frontend/. /opt/currency_exchange/frontend/`
+8. Отредактировать `/etc/nginx/sites-available/default`:
    ```
    server {
           listen 80 default_server;
@@ -82,11 +86,11 @@ mvnw.cmd clean package
    }
    ```
 
-8. Отредактировать `frontend/js/app.js`:
+9. Отредактировать `frontend/js/app.js`:
    ```
    const host = "/api";
    ```
-9. Запустить Tomcat `/opt/tomcat/apache-tomcat-<version>/bin/startup.sh`
+10. Запустить Tomcat `sudo systemctl start tomcat`
 
 
 ## API
